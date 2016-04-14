@@ -1,0 +1,22 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'css/lib/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block styles %}
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+    {% endblock %}
+    <script src="{% static 'js/lib/jquery.js' %}"></script>
+    <script src="{% static 'js/lib/bootstrap.js' %}"></script>
+    <script src="{% static 'js/base.js' %}"></script>
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>
