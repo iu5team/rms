@@ -1,24 +1,25 @@
 # coding=utf-8
+
+"""
+    Модели системы RMS
+"""
+
 from __future__ import unicode_literals
 
 from django.db import models
 
-"""@package models
-   Модели системы RMS
-"""
-
 
 class Position(models.Model):
-    """Модель должностей
-
-    Поля:
-        - title - Название должности
+    """
+    Должность
+    Поле =- название должности
     """
     title = models.CharField(max_length=100, null=False)
 
 
 class Employee(models.Model):
-    """Модель сотрудника
+    """
+        Модель сотрудника
 
         Поля:
             - last_name - Фамилия сотрудника
@@ -32,7 +33,8 @@ class Employee(models.Model):
     position = models.ForeignKey(Position, null=True)
 
     def set_manager(self, manager):
-        """Метод установки руководителя
+        """
+        Метод установки руководителя
 
         :param manager: Руководитель (класс Employee)
         """
@@ -41,7 +43,8 @@ class Employee(models.Model):
         return self
 
     def set_position(self, position):
-        """Метод установки должности
+        """
+        Метод установки должности
 
         :param position: Должность (класс Position)
         """
