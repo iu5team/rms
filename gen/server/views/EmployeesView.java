@@ -5,12 +5,12 @@ import java.util.*;
 /**
  * 
  */
-public class EmployeesTasksView {
+public class EmployeesView {
 
     /**
      * Default constructor
      */
-    public EmployeesTasksView() {
+    public EmployeesView() {
     }
 
     /**
