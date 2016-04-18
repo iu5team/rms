@@ -16,6 +16,9 @@ class Position(models.Model):
     """
     title = models.CharField(max_length=100, null=False)
 
+    def __unicode__(self):
+        return self.title
+
 
 class Employee(models.Model):
     """
@@ -29,7 +32,7 @@ class Employee(models.Model):
     """
     last_name = models.CharField(max_length=100, null=False)
     first_name = models.CharField(max_length=100, null=False)
-    manager = models.ForeignKey('Employee', null=True)
+    manager = models.ForeignKey('Employee', null=True, blank=True)
     position = models.ForeignKey(Position, null=True)
 
     def set_manager(self, manager):
@@ -51,3 +54,6 @@ class Employee(models.Model):
         self.position = position
         self.save()
         return self
+
+    def __unicode__(self):
+        return "{} {}".format(self.last_name, self.first_name)
