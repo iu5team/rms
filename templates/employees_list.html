@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Our Employees</h1>
+    <ul>
+    {% for employee in object_list %}
+        <li>{{ employee.last_name }} {{ employee.first_name }}</li>
+    {% empty %}
+        <li>No employees yet.</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

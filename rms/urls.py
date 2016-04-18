@@ -16,9 +16,11 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-import app
+import app.views
 
 urlpatterns = [
-    url(r'^/', app.views.index),
+    # url(r'^', app.views.index.IndexView),
+    url(r'^employees', app.views.employee.EmployeeList.as_view(), name='employee_list'),
+    url(r'^employee', app.views.employee.EmployeeCreate.as_view(), name='employee_create'),
     url(r'^admin/', admin.site.urls),
 ]
