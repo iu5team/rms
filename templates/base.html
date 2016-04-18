@@ -11,8 +11,11 @@
     {% endblock %}
 </head>
 <body>
-    {% block content %}
-    {% endblock %}
+    <section class="container">
+        {% block content %}
+        {% endblock %}
+    </section>
+
     <script src="{% static 'js/lib/jquery.js' %}"></script>
     <script src="{% static 'js/lib/bootstrap.js' %}"></script>
     <script src="{% static 'js/base.js' %}"></script>
