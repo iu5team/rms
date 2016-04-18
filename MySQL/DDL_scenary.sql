@@ -5,19 +5,19 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
--- Schema MashaProject
+-- Schema ProjectResources
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema MashaProject
+-- Schema ProjectResources
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `MashaProject` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
-USE `MashaProject` ;
+CREATE SCHEMA IF NOT EXISTS `ProjectResources` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
+USE `ProjectResources` ;
 
 -- -----------------------------------------------------
--- Table `MashaProject`.`Position`
+-- Table `ProjectResources`.`Position`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `MashaProject`.`Position` (
+CREATE TABLE IF NOT EXISTS `ProjectResources`.`Position` (
   `idPosition` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idPosition`),
@@ -26,9 +26,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `MashaProject`.`Subordinaries`
+-- Table `ProjectResources`.`Subordinaries`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `MashaProject`.`Subordinaries` (
+CREATE TABLE IF NOT EXISTS `ProjectResources`.`Subordinaries` (
   `idSubordinaries` INT NOT NULL AUTO_INCREMENT,
   `manager` INT NOT NULL,
   `employee` INT NOT NULL,
@@ -38,9 +38,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `MashaProject`.`Employee`
+-- Table `ProjectResources`.`Employee`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `MashaProject`.`Employee` (
+CREATE TABLE IF NOT EXISTS `ProjectResources`.`Employee` (
   `idEmployee` INT NOT NULL AUTO_INCREMENT,
   `position` INT NULL,
   `name` VARCHAR(100) NULL,
@@ -50,31 +50,31 @@ CREATE TABLE IF NOT EXISTS `MashaProject`.`Employee` (
   INDEX `fk_Employee_Employee1_idx` (`Employee_idEmployee` ASC),
   CONSTRAINT `fk_Employee_Position1`
     FOREIGN KEY (`idEmployee`)
-    REFERENCES `MashaProject`.`Position` (`idPosition`)
+    REFERENCES `ProjectResources`.`Position` (`idPosition`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Employee_Subordinaries1`
     FOREIGN KEY (`idEmployee`)
-    REFERENCES `MashaProject`.`Subordinaries` (`employee`)
+    REFERENCES `ProjectResources`.`Subordinaries` (`employee`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Employee_Subordinaries2`
     FOREIGN KEY (`idEmployee`)
-    REFERENCES `MashaProject`.`Subordinaries` (`manager`)
+    REFERENCES `ProjectResources`.`Subordinaries` (`manager`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Employee_Employee1`
     FOREIGN KEY (`Employee_idEmployee`)
-    REFERENCES `MashaProject`.`Employee` (`idEmployee`)
+    REFERENCES `ProjectResources`.`Employee` (`idEmployee`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `MashaProject`.`Task`
+-- Table `ProjectResources`.`Task`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `MashaProject`.`Task` (
+CREATE TABLE IF NOT EXISTS `ProjectResources`.`Task` (
   `idTask` INT NOT NULL AUTO_INCREMENT,
   `creationDate` DATETIME NULL,
   `finishDate` DATETIME NULL,
@@ -87,16 +87,16 @@ CREATE TABLE IF NOT EXISTS `MashaProject`.`Task` (
   INDEX `fk_Task_Employee1_idx` (`assignee` ASC),
   CONSTRAINT `fk_Task_Employee1`
     FOREIGN KEY (`assignee`)
-    REFERENCES `MashaProject`.`Employee` (`idEmployee`)
+    REFERENCES `ProjectResources`.`Employee` (`idEmployee`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `MashaProject`.`CalendarMark`
+-- Table `ProjectResources`.`CalendarMark`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `MashaProject`.`CalendarMark` (
+CREATE TABLE IF NOT EXISTS `ProjectResources`.`CalendarMark` (
   `idCalendarMark` INT NOT NULL AUTO_INCREMENT,
   `employee` INT NOT NULL,
   `date` DATETIME NOT NULL,
@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `MashaProject`.`CalendarMark` (
   INDEX `fk_CalendarMark_Employee1_idx` (`employee` ASC),
   CONSTRAINT `fk_CalendarMark_Employee1`
     FOREIGN KEY (`employee`)
-    REFERENCES `MashaProject`.`Employee` (`idEmployee`)
+    REFERENCES `ProjectResources`.`Employee` (`idEmployee`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
