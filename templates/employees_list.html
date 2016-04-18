@@ -2,11 +2,27 @@
 
 {% block content %}
     <h1>Our Employees</h1>
-    <ul>
-    {% for employee in object_list %}
-        <li>{{ employee.last_name }} {{ employee.first_name }}</li>
-    {% empty %}
-        <li>No employees yet.</li>
-    {% endfor %}
-    </ul>
+
+    <section class="search">
+        <form action="/employees">
+            <div class="input-group">
+                <input type="text" class="form-control" name="query" value="{{ query }}" placeholder="Search for...">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">Search</button>
+                </span>
+            </div>
+        </form>
+    </section>
+
+    <hr>
+
+    <section class="list">
+        <ul>
+            {% for employee in object_list %}
+                <li>{{ employee.name }}</li>
+            {% empty %}
+                No employees yet
+            {% endfor %}
+        </ul>
+    </section>
 {% endblock %}

@@ -1,4 +1,4 @@
 
 $(function () {
-    alert('works');
+    console.log('JS loaded');
 });

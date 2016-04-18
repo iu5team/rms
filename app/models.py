@@ -25,13 +25,11 @@ class Employee(models.Model):
         Модель сотрудника
 
         Поля:
-            - last_name - Фамилия сотрудника
-            - first_name - Имя сотрудника
+            - name - ФИО сотрудника
             - manager - Ссылка на руководителя
             - position - Ссылка на должность сотрудника
     """
-    last_name = models.CharField(max_length=100, null=False)
-    first_name = models.CharField(max_length=100, null=False)
+    name = models.CharField(max_length=100, null=False)
     manager = models.ForeignKey('Employee', null=True, blank=True)
     position = models.ForeignKey(Position, null=True)
 
@@ -56,4 +54,4 @@ class Employee(models.Model):
         return self
 
     def __unicode__(self):
-        return "{} {}".format(self.last_name, self.first_name)
+        return "{}".format(self.name)
