@@ -1,2 +1,0 @@
-# rms
-Resource Management System
