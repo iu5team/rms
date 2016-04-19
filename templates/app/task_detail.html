@@ -5,4 +5,6 @@
     <li>{{ task.assignee }}</li>
     <li>{{ task.status }}</li>
     <li>{{ task.description }}</li>
+    <a href="{% url 'task_update' task.id%}" >Update this task</a>
+    <a href="{% url 'task_confirm_delete' task.id%}" >Delete this task</a>
 </ul>

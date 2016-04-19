@@ -28,5 +28,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^tasks', app.views.task.TaskList.as_view(), name='task_list'),
     url(r'^task/(?P<pk>[0-9]+)/$', app.views.task.TaskDetail.as_view(), name='task_detail'),
+    url(r'^task/update/(?P<pk>[0-9]+)/$', app.views.task.TaskUpdate.as_view(), name='task_update'),
+    url(r'^task/delete/(?P<pk>[0-9]+)/$', app.views.task.TaskDelete.as_view(), name='task_confirm_delete'),
     url(r'^task', app.views.task.TaskCreate.as_view(), name='task_create'),
 ]

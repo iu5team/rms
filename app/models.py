@@ -60,10 +60,12 @@ class Employee(models.Model):
             - name - ФИО сотрудника
             - manager - Ссылка на руководителя
             - position - Ссылка на должность сотрудника
+            - salary - ставка/зарплата
     """
     name = models.CharField(max_length=100, null=False)
     manager = models.ForeignKey('Employee', null=True, blank=True)
     position = models.ForeignKey(Position, null=True)
+    salary = models.IntegerField(blank=True)
 
     def set_manager(self, manager):
         """
