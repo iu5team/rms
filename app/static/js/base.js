@@ -1,4 +1,4 @@
 
 $(function () {
-    console.log('JS loaded');
+    $(".datepicker").datepicker();
 });

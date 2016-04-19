@@ -14,6 +14,13 @@ class TaskCreate(CreateView):
     fields = ['creationDate', 'finishDate', 'assignee', 'status', 'description', 'title']
     success_url = reverse_lazy('task_list')
 
+    def get_form(self, form_class=None):
+        form = super(TaskCreate, self).get_form(form_class)
+        datepicker_class = 'datepicker'
+        form.fields['creationDate'].widget.attrs.update({'class': datepicker_class})
+        form.fields['finishDate'].widget.attrs.update({'class': datepicker_class})
+        return form
+
 
 class TaskList(ListView):
     model = Task
@@ -50,21 +57,17 @@ class TaskDetail(DetailView):
     fields = ['creationDate', 'finishDate', 'assignee', 'status', 'description', 'title']
     template_name_suffix = '_detail'
 
-    def get_context_data(self, **kwargs):
-        context = super(TaskDetail, self).get_context_data(**kwargs)
-
-        query = self.request.GET.get('query', '')
-        context['query'] = query
-
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super(TaskDetail, self).get_context_data(**kwargs)
+    #
+    #     query = self.request.GET.get('query', '')
+    #     context['query'] = query
+    #
+    #     return context
 
     def get_queryset(self):
-        query = self.request.GET.get('query', '')
+        task_id = int(self.kwargs['pk'])
 
-        if query:
-            tasks = Task.objects.filter(pk=query)
-        else:
-            tasks = Task.objects.all()
-
-        return tasks
+        if task_id:
+            return Task.objects.filter(pk=task_id)
 
