@@ -5,108 +5,87 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
--- Schema ProjectResources
+-- Schema rms
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema ProjectResources
+-- Schema rms
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `ProjectResources` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
-USE `ProjectResources` ;
+CREATE SCHEMA IF NOT EXISTS `rms` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
+USE `rms` ;
 
 -- -----------------------------------------------------
--- Table `ProjectResources`.`Position`
+-- Table `rms`.`Position`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ProjectResources`.`Position` (
-  `idPosition` INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `rms`.`Position` (
+  `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`idPosition`),
-  UNIQUE INDEX `idPosition_UNIQUE` (`idPosition` ASC))
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `idPosition_UNIQUE` (`id` ASC))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ProjectResources`.`Subordinaries`
+-- Table `rms`.`Employee`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ProjectResources`.`Subordinaries` (
-  `idSubordinaries` INT NOT NULL AUTO_INCREMENT,
-  `manager` INT NOT NULL,
-  `employee` INT NOT NULL,
-  PRIMARY KEY (`idSubordinaries`),
-  UNIQUE INDEX `idSubordinaries_UNIQUE` (`idSubordinaries` ASC))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `ProjectResources`.`Employee`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ProjectResources`.`Employee` (
-  `idEmployee` INT NOT NULL AUTO_INCREMENT,
-  `position` INT NULL,
+CREATE TABLE IF NOT EXISTS `rms`.`Employee` (
+  `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(100) NULL,
-  `Employee_idEmployee` INT NOT NULL,
-  UNIQUE INDEX `idEmployee_UNIQUE` (`idEmployee` ASC),
-  PRIMARY KEY (`idEmployee`),
-  INDEX `fk_Employee_Employee1_idx` (`Employee_idEmployee` ASC),
-  CONSTRAINT `fk_Employee_Position1`
-    FOREIGN KEY (`idEmployee`)
-    REFERENCES `ProjectResources`.`Position` (`idPosition`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Employee_Subordinaries1`
-    FOREIGN KEY (`idEmployee`)
-    REFERENCES `ProjectResources`.`Subordinaries` (`employee`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Employee_Subordinaries2`
-    FOREIGN KEY (`idEmployee`)
-    REFERENCES `ProjectResources`.`Subordinaries` (`manager`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+  `manager_id` INT NOT NULL,
+  `position_id` INT NOT NULL,
+  UNIQUE INDEX `idEmployee_UNIQUE` (`id` ASC),
+  PRIMARY KEY (`id`),
+  INDEX `fk_Employee_Employee1_idx` (`manager_id` ASC),
+  INDEX `fk_Employee_Position1_idx` (`position_id` ASC),
   CONSTRAINT `fk_Employee_Employee1`
-    FOREIGN KEY (`Employee_idEmployee`)
-    REFERENCES `ProjectResources`.`Employee` (`idEmployee`)
+    FOREIGN KEY (`manager_id`)
+    REFERENCES `rms`.`Employee` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Employee_Position1`
+    FOREIGN KEY (`position_id`)
+    REFERENCES `rms`.`Position` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ProjectResources`.`Task`
+-- Table `rms`.`Task`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ProjectResources`.`Task` (
-  `idTask` INT NOT NULL AUTO_INCREMENT,
-  `creationDate` DATETIME NULL,
-  `finishDate` DATETIME NULL,
-  `assignee` INT NULL,
+CREATE TABLE IF NOT EXISTS `rms`.`Task` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `creation_date` DATETIME NULL,
+  `finish_date` DATETIME NULL,
+  `assignee_id` INT NULL,
   `status` VARCHAR(45) NULL,
   `description` VARCHAR(255) NULL,
   `title` VARCHAR(20) NULL,
-  PRIMARY KEY (`idTask`),
-  UNIQUE INDEX `idTask_UNIQUE` (`idTask` ASC),
-  INDEX `fk_Task_Employee1_idx` (`assignee` ASC),
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `idTask_UNIQUE` (`id` ASC),
+  INDEX `fk_Task_Employee1_idx` (`assignee_id` ASC),
   CONSTRAINT `fk_Task_Employee1`
-    FOREIGN KEY (`assignee`)
-    REFERENCES `ProjectResources`.`Employee` (`idEmployee`)
+    FOREIGN KEY (`assignee_id`)
+    REFERENCES `rms`.`Employee` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `ProjectResources`.`CalendarMark`
+-- Table `rms`.`CalendarMark`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ProjectResources`.`CalendarMark` (
-  `idCalendarMark` INT NOT NULL AUTO_INCREMENT,
-  `employee` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `rms`.`CalendarMark` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `employee_id` INT NOT NULL,
   `date` DATETIME NOT NULL,
   `type` INT NULL,
-  PRIMARY KEY (`idCalendarMark`),
-  UNIQUE INDEX `idCalendarMark_UNIQUE` (`idCalendarMark` ASC),
-  INDEX `fk_CalendarMark_Employee1_idx` (`employee` ASC),
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `idCalendarMark_UNIQUE` (`id` ASC),
+  INDEX `fk_CalendarMark_Employee1_idx` (`employee_id` ASC),
   CONSTRAINT `fk_CalendarMark_Employee1`
-    FOREIGN KEY (`employee`)
-    REFERENCES `ProjectResources`.`Employee` (`idEmployee`)
+    FOREIGN KEY (`employee_id`)
+    REFERENCES `rms`.`Employee` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
