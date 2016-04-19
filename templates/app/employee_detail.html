@@ -1,0 +1,7 @@
+<h1>{{ employee.name }}</h1>
+<ul>
+    <li>{{ employee.manager }}</li>
+    <li>{{ employee.position }}</li>
+    <a href="{% url 'employee_update' employee.id%}" >Update employee</a>
+    <a href="{% url 'employee_confirm_delete' employee.id%}" >Update employee</a>
+</ul>

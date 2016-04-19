@@ -21,6 +21,9 @@ import app.views
 urlpatterns = [
     # url(r'^', app.views.index.IndexView),
     url(r'^employees', app.views.employee.EmployeeList.as_view(), name='employee_list'),
+    url(r'^employee/(?P<pk>[0-9]+)/$', app.views.employee.EmployeeDetail.as_view(), name='employee_detail'),
+    url(r'^employee/update/(?P<pk>[0-9]+)/$', app.views.employee.EmployeeUpdate.as_view(), name='employee_update'),
+    url(r'^employee/delete/(?P<pk>[0-9]+)/$', app.views.employee.EmployeeDelete.as_view(), name='employee_confirm_delete'),
     url(r'^employee', app.views.employee.EmployeeCreate.as_view(), name='employee_create'),
     url(r'^admin/', admin.site.urls),
     url(r'^tasks', app.views.task.TaskList.as_view(), name='task_list'),

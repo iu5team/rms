@@ -19,7 +19,7 @@
     <section class="list">
         <ul>
             {% for employee in object_list %}
-                <li>{{ employee.name }}</li>
+                 <li><a href="{% url 'employee_detail' employee.id %}">{{ employee.name }}</a></li>
             {% empty %}
                 No employees yet
             {% endfor %}

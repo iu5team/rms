@@ -1,5 +1,6 @@
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.views.generic.edit import CreateView
+from django.views.generic import DetailView
+from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from django.views.generic.edit import DeleteView
 
@@ -8,7 +9,7 @@ from app.models import Employee
 
 class EmployeeCreate(CreateView):
     model = Employee
-    fields = ['name', 'manager', 'position']
+    fields = ['name', 'manager', 'position', 'salary']
     success_url = reverse_lazy('employee_list')
 
 
@@ -37,6 +38,46 @@ class EmployeeList(ListView):
         return employees
 
 
-class TaskDelete(DeleteView):
+class EmployeeDelete(DeleteView):
     model = Employee
     success_url = reverse_lazy('employee_list')
+
+    def get_queryset(self):
+        employee_id = int(self.kwargs['pk'])
+
+        if employee_id:
+            return Employee.objects.filter(pk=employee_id)
+
+
+class EmployeeDetail(DetailView):
+    model = Employee
+    fields = ['name', 'manager', 'position', 'salary']
+    template_name_suffix = '_detail'
+
+
+    # def get_context_data(self, **kwargs):
+    #     context = super(TaskDetail, self).get_context_data(**kwargs)
+    #
+    #     query = self.request.GET.get('query', '')
+    #     context['query'] = query
+    #
+    #     return context
+
+    def get_queryset(self):
+        employee_id = int(self.kwargs['pk'])
+
+        if employee_id:
+            return Employee.objects.filter(pk=employee_id)
+
+
+class EmployeeUpdate(UpdateView):
+    model = Employee
+    fields = ['name', 'manager', 'position', 'salary']
+    template_name_suffix = '_update'
+    success_url = reverse_lazy('employee_list')
+
+    def get_queryset(self):
+        employee_id = int(self.kwargs['pk'])
+
+        if employee_id:
+            return Employee.objects.filter(pk=employee_id)
