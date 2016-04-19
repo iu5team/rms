@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Our Employees</h1>
+    <h1>Tasks</h1>
 
     <section class="search">
         <form>
@@ -18,10 +18,10 @@
 
     <section class="list">
         <ul>
-            {% for employee in object_list %}
-                <li>{{ employee.name }}</li>
+            {% for task in object_list %}
+                <li>{{ task.title }}</li>
             {% empty %}
-                No employees yet
+                No tasks for today!
             {% endfor %}
         </ul>
     </section>
