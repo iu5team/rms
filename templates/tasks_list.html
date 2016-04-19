@@ -25,4 +25,10 @@
             {% endfor %}
         </ul>
     </section>
+
+    <section class="add-section">
+        <a href="{% url 'task_create' %}">
+            <button type="button" class="btn btn-primary btn-sm center-block">Create a task</button>
+        </a>
+    </section>
 {% endblock %}

@@ -25,4 +25,10 @@
             {% endfor %}
         </ul>
     </section>
+
+    <section class="add-section">
+        <a href="{% url 'employee_create' %}">
+            <button type="button" class="btn btn-primary btn-sm center-block">Add an employee</button>
+        </a>
+    </section>
 {% endblock %}
