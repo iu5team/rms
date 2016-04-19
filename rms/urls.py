@@ -24,6 +24,6 @@ urlpatterns = [
     url(r'^employee', app.views.employee.EmployeeCreate.as_view(), name='employee_create'),
     url(r'^admin/', admin.site.urls),
     url(r'^tasks', app.views.task.TaskList.as_view(), name='task_list'),
+    url(r'^(/task/?P<idTask>[0-9]+)/$', app.views.task.TaskDetail.as_view(), name='detail'),
     url(r'^task', app.views.task.TaskCreate.as_view(), name='task_create'),
-    url(r'^admin/', admin.site.urls),
 ]
