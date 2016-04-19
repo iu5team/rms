@@ -32,7 +32,7 @@ class Task(models.Model):
     """
     creationDate = models.DateField()
     finishDate = models.DateField()
-    assignee = models.ForeignKey('Emloyee', null=True, blank=True)
+    assignee = models.ForeignKey('Employee', null=True, blank=True)
     status = models.CharField(max_length=45)
     description = models.CharField(max_length=255)
     title = models.CharField(max_length=20)
