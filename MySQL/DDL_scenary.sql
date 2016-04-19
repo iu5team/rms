@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS `rms`.`Employee` (
   `name` VARCHAR(100) NULL,
   `manager_id` INT NOT NULL,
   `position_id` INT NOT NULL,
+  `salary` INT NOT NULL,
   UNIQUE INDEX `idEmployee_UNIQUE` (`id` ASC),
   PRIMARY KEY (`id`),
   INDEX `fk_Employee_Employee1_idx` (`manager_id` ASC),
