@@ -5,10 +5,12 @@ from django.views.generic.edit import DeleteView
 
 from app.models import Task
 
+
 class TaskCreate(CreateView):
     model = Task
     fields = ['creationDate', 'finishDate', 'assignee', 'status', 'description', 'title']
     success_url = reverse_lazy('task_list')
+
 
 class TaskList(ListView):
     model = Task
@@ -33,6 +35,8 @@ class TaskList(ListView):
             tasks = Task.objects.all()
 
         return tasks
+
+
 class TaskDelete(DeleteView):
     model = Task
     success_url = reverse_lazy('task_list')

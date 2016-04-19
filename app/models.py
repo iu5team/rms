@@ -3,10 +3,12 @@
 """
     Модели системы RMS
 """
-
 from __future__ import unicode_literals
+import datetime
+
 
 from django.db import models
+from django.utils import timezone
 
 
 class Position(models.Model):
@@ -19,6 +21,7 @@ class Position(models.Model):
     def __unicode__(self):
         return self.title
 
+
 class Task(models.Model):
     """
     Задача
@@ -30,8 +33,8 @@ class Task(models.Model):
         - Описание
         - Название
     """
-    creationDate = models.DateField()
-    finishDate = models.DateField()
+    creationDate = models.DateField(blank=True)
+    finishDate = models.DateField(blank=True)
     assignee = models.ForeignKey('Employee', null=True, blank=True)
     status = models.CharField(max_length=45)
     description = models.CharField(max_length=255)
@@ -44,6 +47,9 @@ class Task(models.Model):
         self.assignee = employee
         self.save()
         return self
+
+    def __unicode__(self):
+        return self.title
 
 
 class Employee(models.Model):

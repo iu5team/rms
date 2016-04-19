@@ -23,4 +23,7 @@ urlpatterns = [
     url(r'^employees', app.views.employee.EmployeeList.as_view(), name='employee_list'),
     url(r'^employee', app.views.employee.EmployeeCreate.as_view(), name='employee_create'),
     url(r'^admin/', admin.site.urls),
+    url(r'^tasks', app.views.task.TaskList.as_view(), name='task_list'),
+    url(r'^task', app.views.task.TaskCreate.as_view(), name='task_create'),
+    url(r'^admin/', admin.site.urls),
 ]
