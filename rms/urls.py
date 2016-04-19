@@ -19,7 +19,7 @@ from django.contrib import admin
 import app.views
 
 urlpatterns = [
-    # url(r'^', app.views.index.IndexView),
+    url(r'^$', app.views.index.IndexView.as_view(), name='index'),
     url(r'^employees', app.views.employee.EmployeeList.as_view(), name='employee_list'),
     url(r'^employee/(?P<pk>[0-9]+)/$', app.views.employee.EmployeeDetail.as_view(), name='employee_detail'),
     url(r'^employee/update/(?P<pk>[0-9]+)/$', app.views.employee.EmployeeUpdate.as_view(), name='employee_update'),
