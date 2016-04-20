@@ -4,7 +4,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from django.views.generic.edit import DeleteView
 
-from app.models import Employee
+from app.models import Employee, Task
 
 
 class EmployeeCreate(CreateView):
@@ -42,26 +42,17 @@ class EmployeeDelete(DeleteView):
     model = Employee
     success_url = reverse_lazy('employee_list')
 
-    def get_queryset(self):
-        employee_id = int(self.kwargs['pk'])
-
-        if employee_id:
-            return Employee.objects.filter(pk=employee_id)
+    def delete(self, request, *args, **kwargs):
+        employee = self.get_object()
+        Employee.objects.filter(manager=employee).update(manager=None)
+        Task.objects.filter(assignee=employee).update(assignee=None)
+        return super(EmployeeDelete, self).delete(request, *args, **kwargs)
 
 
 class EmployeeDetail(DetailView):
     model = Employee
     fields = ['name', 'manager', 'position', 'salary']
     template_name_suffix = '_detail'
-
-
-    # def get_context_data(self, **kwargs):
-    #     context = super(TaskDetail, self).get_context_data(**kwargs)
-    #
-    #     query = self.request.GET.get('query', '')
-    #     context['query'] = query
-    #
-    #     return context
 
     def get_queryset(self):
         employee_id = int(self.kwargs['pk'])

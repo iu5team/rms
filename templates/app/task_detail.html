@@ -1,3 +1,7 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
 <h1>{{ task.title }}</h1>
 <ul>
     <li>{{ task.creationDate }}</li>
@@ -8,3 +12,4 @@
     <a href="{% url 'task_update' task.id%}" >Update this task</a>
     <a href="{% url 'task_confirm_delete' task.id%}" >Delete this task</a>
 </ul>
+{% endblock %}

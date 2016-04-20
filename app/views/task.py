@@ -51,25 +51,11 @@ class TaskDelete(DeleteView):
     model = Task
     success_url = reverse_lazy('task_list')
 
-    def get_queryset(self):
-        task_id = int(self.kwargs['pk'])
-
-        if task_id:
-            return Task.objects.filter(pk=task_id)
-
 
 class TaskDetail(DetailView):
     model = Task
     fields = ['creationDate', 'finishDate', 'assignee', 'status', 'description', 'title']
     template_name_suffix = '_detail'
-
-    # def get_context_data(self, **kwargs):
-    #     context = super(TaskDetail, self).get_context_data(**kwargs)
-    #
-    #     query = self.request.GET.get('query', '')
-    #     context['query'] = query
-    #
-    #     return context
 
     def get_queryset(self):
         task_id = int(self.kwargs['pk'])
