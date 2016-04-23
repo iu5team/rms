@@ -16,12 +16,12 @@ public class Task {
     /**
      * 
      */
-    public Date creationDate;
+    public Date creation_date;
 
     /**
      * 
      */
-    public Date finishDate;
+    public Date finish_date;
 
     /**
      * 

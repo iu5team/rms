@@ -7,18 +7,19 @@ from django.views.generic.edit import DeleteView
 from django.views.generic.detail import DetailView
 
 from app.models import Task
+import app.views.gateway.task_gateway
 
 
 class TaskCreate(CreateView):
     model = Task
-    fields = ['creationDate', 'finishDate', 'assignee', 'status', 'description', 'title']
+    fields = ['creation_date', 'finish_date', 'assignee', 'status', 'description', 'title']
     success_url = reverse_lazy('task_list')
 
     def get_form(self, form_class=None):
         form = super(TaskCreate, self).get_form(form_class)
         datepicker_class = 'datepicker'
-        form.fields['creationDate'].widget.attrs.update({'class': datepicker_class})
-        form.fields['finishDate'].widget.attrs.update({'class': datepicker_class})
+        form.fields['creation_date'].widget.attrs.update({'class': datepicker_class})
+        form.fields['finish_date'].widget.attrs.update({'class': datepicker_class})
         return form
 
 
@@ -54,7 +55,7 @@ class TaskDelete(DeleteView):
 
 class TaskDetail(DetailView):
     model = Task
-    fields = ['creationDate', 'finishDate', 'assignee', 'status', 'description', 'title']
+    fields = ['creation_date', 'finish_date', 'assignee', 'status', 'description', 'title']
     template_name_suffix = '_detail'
 
     def get_queryset(self):
@@ -66,7 +67,7 @@ class TaskDetail(DetailView):
 
 class TaskUpdate(UpdateView):
     model = Task
-    fields = ['creationDate', 'finishDate', 'assignee', 'status', 'description', 'title']
+    fields = ['creation_date', 'finish_date', 'assignee', 'status', 'description', 'title']
     template_name_suffix = '_update'
     success_url = reverse_lazy('task_list')
 

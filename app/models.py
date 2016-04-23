@@ -33,8 +33,8 @@ class Task(models.Model):
         - Описание
         - Название
     """
-    creationDate = models.DateField(blank=True)
-    finishDate = models.DateField(blank=True)
+    creation_date = models.DateField(blank=True)
+    finish_date = models.DateField(blank=True)
     assignee = models.ForeignKey('Employee', null=True, blank=True)
     status = models.CharField(max_length=45)
     description = models.CharField(max_length=255)

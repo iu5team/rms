@@ -91,8 +91,8 @@ def plot_tasks(tasks, date_from, date_to):
 
     days = []
     for task in tasks:
-        start_date = task.creationDate
-        end_date = task.finishDate
+        start_date = task.creation_date
+        end_date = task.finish_date
 
         for i in range(duration):
             cur_date = date_from + datetime.timedelta(i)

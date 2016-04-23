@@ -4,8 +4,8 @@
 
 <h1>{{ task.title }}</h1>
 <ul>
-    <li>Date created: {{ task.creationDate }}</li>
-    <li>Date finished: {{ task.finishDate }}</li>
+    <li>Date created: {{ task.creation_date }}</li>
+    <li>Date finished: {{ task.finish_date }}</li>
     <li>Assignee: <a href="{% url 'employee_detail' task.assignee.id %}">{{ task.assignee }}</a></li>
     <li>Status: {{ task.status }}</li>
     <li>Description: {{ task.description }}</li>
