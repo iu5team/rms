@@ -6,6 +6,7 @@ from datetime import date
 
 from django import forms
 from django.core.urlresolvers import reverse, reverse_lazy
+from django.db.models import Q
 from django.shortcuts import render
 from django.views.generic import DetailView, View, FormView
 from django.views.generic.edit import CreateView, UpdateView
@@ -69,8 +70,10 @@ class EmployeeDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super(EmployeeDetail, self).get_context_data(**kwargs)
         pk = context['employee'].id
-        tasks = Task.objects.filter(assignee=pk)
-        context['tasks'] = tasks
+
+        context['tasks'] = Task.objects.filter(assignee=pk)
+        context['tasks_done'] = Task.objects.filter(Q(assignee=pk) & Q(status='done'))
+        context['tasks_undone'] = Task.objects.filter(Q(assignee=pk) & ~Q(status='done'))
 
         return context
 

@@ -19,9 +19,20 @@
     </section>
 
     <section class="employee__tasks">
-        <h3>Tasks</h3>
+        <h3>Undone Tasks ({{ tasks_undone | length }})</h3>
         <ul>
-            {% for task in tasks %}
+            {% for task in tasks_undone %}
+                <li>
+                    <a href="{% url 'task_detail' task.id %}">{{ task.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section class="employee__tasks">
+        <h3>Done Tasks ({{ tasks_done | length }})</h3>
+        <ul>
+            {% for task in tasks_done %}
                 <li>
                     <a href="{% url 'task_detail' task.id %}">{{ task.title }}</a>
                 </li>
