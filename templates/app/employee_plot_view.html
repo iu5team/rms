@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{{ employee.name }}</h1>
+
+    <section class="params">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Plot" />
+        </form>
+    </section>
+
+    <section class="plots">
+        <img src="data:image/png;base64,{{ graphic }}">
+    </section>
+
+{% endblock %}

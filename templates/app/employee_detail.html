@@ -9,6 +9,7 @@
             <li>Manager: {{ employee.manager }}</li>
             <li>Position: {{ employee.position }}</li>
             <li>Salary: {{ employee.salary }}</li>
+            <li><a href="{% url 'employee_plot' employee.id %}">Show resource plot</a></li>
         </ul>
     </section>
 
@@ -26,10 +27,6 @@
                 </li>
             {% endfor %}
         </ul>
-    </section>
-
-    <section class="plots">
-        <img src="data:image/png;base64,{{ graphic }}">
     </section>
 
 {% endblock %}
