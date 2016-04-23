@@ -6,6 +6,7 @@ from datetime import date
 
 from django import forms
 from django.core.urlresolvers import reverse, reverse_lazy
+from django.shortcuts import render
 from django.views.generic import DetailView, View, FormView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
@@ -75,8 +76,8 @@ class EmployeeDetail(DetailView):
 
 
 class EmployeePlotSettingsForm(forms.Form):
-    date_from = forms.DateField()
-    date_to = forms.DateField()
+    date_from = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    date_to = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
 
 
 def plot_tasks(tasks, date_from, date_to):
@@ -131,15 +132,18 @@ class EmployeePlotView(FormView):
     success_url = '/thanks/'
 
     def form_valid(self, form):
-        # TODO: get those params from form
-        employee_id = 5
-        date_from = date(2016, 4, 1)
-        date_to = date(2016, 5, 1)
+        date_from = form.cleaned_data['date_from']
+        date_to = form.cleaned_data['date_to']
 
-        # change context here
-        plot_str = plot_tasks(employee_id, date_from, date_to)
+        employee_id = self.kwargs['pk']
+        tasks = Task.objects.filter(assignee=employee_id)
 
-        return super(EmployeePlotView, self).form_valid(form)
+        context = {}
+        context['form'] = EmployeePlotSettingsForm(form.data)
+        context['employee'] = Employee.objects.get(pk=employee_id)
+        context['graphic'] = plot_tasks(tasks, date_from, date_to)
+
+        return render(self.request, self.template_name, context)
 
 
 class EmployeeUpdate(UpdateView):
