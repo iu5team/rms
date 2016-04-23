@@ -4,12 +4,14 @@
 
 <h1>{{ task.title }}</h1>
 <ul>
-    <li>{{ task.creationDate }}</li>
-    <li>{{ task.finishDate }}</li>
-    <li>{{ task.assignee }}</li>
-    <li>{{ task.status }}</li>
-    <li>{{ task.description }}</li>
+    <li>Date created: {{ task.creationDate }}</li>
+    <li>Date finished: {{ task.finishDate }}</li>
+    <li>Assignee: <a href="{% url 'employee_detail' task.assignee.id %}">{{ task.assignee }}</a></li>
+    <li>Status: {{ task.status }}</li>
+    <li>Description: {{ task.description }}</li>
+</ul>
+
     <a href="{% url 'task_update' task.id%}" >Update this task</a>
     <a href="{% url 'task_confirm_delete' task.id%}" >Delete this task</a>
-</ul>
+
 {% endblock %}

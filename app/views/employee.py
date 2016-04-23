@@ -54,11 +54,12 @@ class EmployeeDetail(DetailView):
     fields = ['name', 'manager', 'position', 'salary']
     template_name_suffix = '_detail'
 
-    def get_queryset(self):
-        employee_id = int(self.kwargs['pk'])
+    def get_context_data(self, **kwargs):
+        context = super(EmployeeDetail, self).get_context_data(**kwargs)
+        context_related = Task.objects.all()
+        context['tasks'] = context_related
 
-        if employee_id:
-            return Employee.objects.filter(pk=employee_id)
+        return context
 
 
 class EmployeeUpdate(UpdateView):

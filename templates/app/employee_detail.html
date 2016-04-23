@@ -1,12 +1,31 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>{{ employee.name }}</h1>
-<ul>
-    <li>{{ employee.manager }}</li>
-    <li>{{ employee.position }}</li>
-    <li>{{ employee.salary }}</li>
-    <a href="{% url 'employee_update' employee.id%}" >Update employee</a>
-    <a href="{% url 'employee_confirm_delete' employee.id%}" >Delete employee</a>
-</ul>
+    <h1>{{ employee.name }}</h1>
+
+    <section class="employee__about">
+        <h3>About</h3>
+        <ul>
+            <li>Manager: {{ employee.manager }}</li>
+            <li>Position: {{ employee.position }}</li>
+            <li>Salary: {{ employee.salary }}</li>
+        </ul>
+    </section>
+
+    <section class="employee__controls">
+        <a href="{% url 'employee_update' employee.id %}" >Update employee</a>
+        <a href="{% url 'employee_confirm_delete' employee.id %}" >Delete employee</a>
+    </section>
+
+    <section class="employee__tasks">
+        <h3>Tasks</h3>
+        <ul>
+            {% for task in tasks %}
+                <li>
+                    <a href="{% url 'task_detail' task.id %}">{{ task.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+
 {% endblock %}
