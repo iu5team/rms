@@ -2,6 +2,7 @@
 
 {% block content %}
     <h1>{{ employee.name }}</h1>
+    <input class="employee__id" type="hidden" value="{{ employee.id }}"/>
 
     <section class="employee__about">
         <h3>About</h3>
@@ -38,6 +39,19 @@
                 </li>
             {% endfor %}
         </ul>
+    </section>
+
+    <section class="employee__calendar">
+        <h3>Tasks calendar</h3>
+        <div class="calendar-datepicker datepicker-inline"></div>
+        <div class="calendar-tasks"></div>
+        <script type="application/javascript">
+            var allowedTasksDates = [];
+            {% for task_date in tasks_dates %}
+                allowedTasksDates.push("{{ task_date | date:"Y-m-d" }}");
+            {% endfor %}
+            window.allowedTasksDates = allowedTasksDates;
+        </script>
     </section>
 
 {% endblock %}

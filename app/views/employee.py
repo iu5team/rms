@@ -71,9 +71,11 @@ class EmployeeDetail(DetailView):
         context = super(EmployeeDetail, self).get_context_data(**kwargs)
         pk = context['employee'].id
 
-        context['tasks'] = Task.objects.filter(assignee=pk)
+        tasks = Task.objects.filter(assignee=pk)
+        context['tasks'] = tasks
         context['tasks_done'] = Task.objects.filter(Q(assignee=pk) & Q(status='done'))
         context['tasks_undone'] = Task.objects.filter(Q(assignee=pk) & ~Q(status='done'))
+        context['tasks_dates'] = map(lambda task: task.creation_date, tasks)
 
         return context
 

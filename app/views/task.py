@@ -1,7 +1,9 @@
+import datetime
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponse
 from django.http.response import Http404
 from django.shortcuts import get_object_or_404, render
+from django.views.generic import View
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from django.views.generic.edit import DeleteView
@@ -82,3 +84,15 @@ class TaskUpdate(UpdateView):
 
         if task_id:
             return Task.objects.filter(pk=task_id)
+
+
+class TasksByDate(View):
+    def get(self, request, *args, **kwargs):
+        assignee = int(request.GET.get('assignee'))
+        date = request.GET.get('date')
+        if assignee is None or date is None:
+            raise Http404()
+
+        context = {'object_list': Task.objects.filter(assignee_id=assignee,
+                                                      creation_date=date)}
+        return render(request, 'api/task_list.html', context=context)
