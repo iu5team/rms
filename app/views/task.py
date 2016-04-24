@@ -1,8 +1,8 @@
 import datetime
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponse
-from django.http.response import Http404
-from django.shortcuts import get_object_or_404, render
+from django.http.response import Http404, HttpResponseBadRequest
+from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import View
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
@@ -11,7 +11,7 @@ from django.views.generic.detail import DetailView
 
 from app.models import Task, Employee
 import app.views.gateway.task_gateway
-from app.views.gateway.task_gateway import TaskGateway
+from app.views.gateway.task_gateway import TaskGateway, SpentTimeArguments
 
 
 class TaskCreate(CreateView):
@@ -103,3 +103,18 @@ class TasksByDate(View):
         context = {'object_list': Task.objects.filter(assignee_id=assignee,
                                                       creation_date=date)}
         return render(request, 'api/task_list.html', context=context)
+
+
+class TaskSpentTime(View):
+    def post(self, request, *args, **kwargs):
+        task_id = self.kwargs['pk']
+        assignee = request.POST.get('assignee_id')
+        days = request.POST.get('days')
+
+        try:
+            args = SpentTimeArguments(task_id, assignee, days)
+            task = TaskGateway.update_wasted_days(args)
+        except SpentTimeArguments.BadArguments as e:
+            return HttpResponseBadRequest(e.message)
+
+        return redirect(reverse('task_detail', args=[task_id]))

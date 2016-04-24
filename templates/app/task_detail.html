@@ -2,16 +2,26 @@
 
 {% block content %}
 
-<h1>{{ task.title }}</h1>
-<ul>
-    <li>Date created: {{ task.creation_date }}</li>
-    <li>Date finished: {{ task.finish_date }}</li>
-    <li>Assignee: <a href="{% url 'employee_detail' task.assignee_id %}">{{ task.assignee.name }}</a></li>
-    <li>Status: {{ task.status }}</li>
-    <li>Description: {{ task.description }}</li>
-</ul>
+    <h1>{{ task.title }}</h1>
+    <ul>
+        <li>Date created: {{ task.creation_date }}</li>
+        <li>Date finished: {{ task.finish_date }}</li>
+        <li>Assignee: <a href="{% url 'employee_detail' task.assignee_id %}">{{ task.assignee.name }}</a></li>
+        <li>Status: {{ task.status }}</li>
+        <li>Description: {{ task.description }}</li>
+        {% if task.wasted_days %}
+            <li>Days spent: {{ task.wasted_days }}</li>
+        {% endif %}
+    </ul>
 
     <a href="{% url 'task_update' task.id%}" >Update this task</a>
     <a href="{% url 'task_confirm_delete' task.id%}" >Delete this task</a>
+
+    <form method="post" action="{% url 'task_spent_time' task.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="assignee_id" value="{{ task.assignee_id }}"/>
+        <input type="number" name="days" placeholder="Days spent" />
+        <input type="submit" value="Submit" />
+    </form>
 
 {% endblock %}

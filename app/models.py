@@ -39,6 +39,7 @@ class Task(models.Model):
     status = models.CharField(max_length=45)
     description = models.CharField(max_length=255)
     title = models.CharField(max_length=20)
+    wasted_days = models.IntegerField(null=True)
 
     def set_assignee(self, employee):
         """Метод установки ответственного

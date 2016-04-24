@@ -18,7 +18,7 @@ $(function () {
             }).done(function(data) {
                 $tasksList.html(data)
             }).error(function(data) {
-                alert("Error: data");
+                alert("Error:" + data);
             });
         },
         beforeShowDay: function(date){

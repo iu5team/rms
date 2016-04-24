@@ -13,6 +13,7 @@ class TaskGateway(Gateway):
         4: 'title',
         5: 'assignee_id',
         6: 'finish_date',
+        7: 'wasted_days',
     }
 
     def __init__(self, **kwargs):
@@ -23,6 +24,7 @@ class TaskGateway(Gateway):
         self._description = kwargs.get('description')
         self._title = kwargs.get('title')
         self._assignee_id = kwargs.get('assignee_id')
+        self._wasted_days = kwargs.get('wasted_days')
         self.__exists__ = kwargs.get('__exists__', False)
 
     @property
@@ -79,6 +81,15 @@ class TaskGateway(Gateway):
         self._assignee_id = assignee_id
         self.__dirty__.add('assignee_id')
 
+    @property
+    def wasted_days(self):
+        return self._wasted_days
+
+    @wasted_days.setter
+    def wasted_days(self, wasted_days):
+        self._wasted_days = wasted_days
+        self.__dirty__.add('wasted_days')
+
     @classmethod
     def find_by_title(cls, title, contains=False):
         c = cls.get_conn().cursor()
@@ -97,3 +108,45 @@ class TaskGateway(Gateway):
             result.append(d)
         return result
 
+    @classmethod
+    def update_wasted_days(cls, args):
+        """
+        :type args: SpentTimeArguments
+        """
+        task = cls.find_by_id(args.task_id)
+        task.wasted_days = args.days
+        task.save()
+        return task
+
+
+class SpentTimeArguments:
+
+    class BadArguments(Exception):
+        pass
+
+    def __init__(self, task_id, assignee_id, days):
+        self.task_id = self._parse_task_id(task_id)
+        self.assignee_id = self._parse_assignee_id(assignee_id)
+        self.days = self._parse_days(days)
+
+    def _parse_task_id(self, task_id):
+        try:
+            return int(task_id)
+        except ValueError:
+            raise self.BadArguments("Bad task_id")
+
+    def _parse_assignee_id(self, assignee_id):
+        if assignee_id is None:
+            raise self.BadArguments("Bad assignee_id")
+        try:
+            return int(assignee_id)
+        except ValueError:
+            raise self.BadArguments("Bad assignee_id")
+
+    def _parse_days(self, days):
+        if days is None:
+            raise self.BadArguments("Bad assignee_id")
+        try:
+            return int(days)
+        except ValueError:
+            raise self.BadArguments("Bad days")
