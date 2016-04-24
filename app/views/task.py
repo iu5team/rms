@@ -85,6 +85,13 @@ class TaskUpdate(UpdateView):
         if task_id:
             return Task.objects.filter(pk=task_id)
 
+    def get_form(self, form_class=None):
+        form = super(TaskUpdate, self).get_form(form_class)
+        datepicker_class = 'datepicker'
+        form.fields['creation_date'].widget.attrs.update({'class': datepicker_class})
+        form.fields['finish_date'].widget.attrs.update({'class': datepicker_class})
+        return form
+
 
 class TasksByDate(View):
     def get(self, request, *args, **kwargs):
