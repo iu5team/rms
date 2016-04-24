@@ -10,7 +10,8 @@ class GatewayConnection(object):
         super(GatewayConnection, self).__init__()
         self.db_name = settings.DATABASES['default']['NAME']
         self.conn = sqlite3.connect(self.db_name,
-                                    detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+                                    detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES,
+                                    check_same_thread=False)
 
     @classmethod
     def get_connection(cls):
@@ -29,7 +30,7 @@ class GatewayConnection(object):
         return dict(zip(desc, row))
 
 
-class DoesNotExistBase(Exception):
+class DoesNotExist(Exception):
     GATEWAY_CLASS = None
 
     def __init__(self, entity_id=None):
@@ -56,10 +57,10 @@ class Gateway(object):
 
         cls = self.__class__
 
-        class DoesNotExist(DoesNotExistBase):
+        class _DoesNotExist(DoesNotExist):
             GATEWAY_CLASS = cls
 
-        self.DoesNotExist = DoesNotExist
+        self.DoesNotExist = _DoesNotExist
 
     @property
     def id(self):
@@ -132,3 +133,4 @@ class Gateway(object):
 
         self.conn.execute("DELETE FROM {} WHERE `id` = ?".format(self.TABLE_NAME), [self.id])
         self.conn.commit()
+        self.__exists__ = False

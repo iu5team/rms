@@ -97,11 +97,3 @@ class TaskGateway(Gateway):
             result.append(d)
         return result
 
-task = TaskGateway(
-    description='gwegwe',
-    title='opwpwoekf',
-    creation_date=datetime.date.today(),
-    finish_date=datetime.date.today(),
-    status='122',
-    assignee_id=4
-)

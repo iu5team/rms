@@ -1,13 +1,15 @@
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponse
+from django.http.response import Http404
 from django.shortcuts import get_object_or_404, render
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from django.views.generic.edit import DeleteView
 from django.views.generic.detail import DetailView
 
-from app.models import Task
+from app.models import Task, Employee
 import app.views.gateway.task_gateway
+from app.views.gateway.task_gateway import TaskGateway
 
 
 class TaskCreate(CreateView):
@@ -55,14 +57,18 @@ class TaskDelete(DeleteView):
 
 class TaskDetail(DetailView):
     model = Task
-    fields = ['creation_date', 'finish_date', 'assignee', 'status', 'description', 'title']
     template_name_suffix = '_detail'
+    object = None
 
-    def get_queryset(self):
-        task_id = int(self.kwargs['pk'])
+    def get(self, request, *args, **kwargs):
+        pk = self.kwargs.get(self.pk_url_kwarg)
+        if pk is None:
+            raise Http404()
 
-        if task_id:
-            return Task.objects.filter(pk=task_id)
+        task = TaskGateway.find_by_id(pk)
+        task.assignee = Employee.objects.filter(pk=task.assignee_id).get()
+        context = self.get_context_data(task=task)
+        return self.render_to_response(context)
 
 
 class TaskUpdate(UpdateView):

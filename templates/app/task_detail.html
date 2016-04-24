@@ -6,7 +6,7 @@
 <ul>
     <li>Date created: {{ task.creation_date }}</li>
     <li>Date finished: {{ task.finish_date }}</li>
-    <li>Assignee: <a href="{% url 'employee_detail' task.assignee.id %}">{{ task.assignee }}</a></li>
+    <li>Assignee: <a href="{% url 'employee_detail' task.assignee_id %}">{{ task.assignee.name }}</a></li>
     <li>Status: {{ task.status }}</li>
     <li>Description: {{ task.description }}</li>
 </ul>
