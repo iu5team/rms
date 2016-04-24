@@ -108,11 +108,11 @@ class TasksByDate(View):
 class TaskSpentTime(View):
     def post(self, request, *args, **kwargs):
         task_id = self.kwargs['pk']
-        assignee = request.POST.get('assignee_id')
+        assignee_id = request.POST.get('assignee_id')
         days = request.POST.get('days')
 
         try:
-            args = SpentTimeArguments(task_id, assignee, days)
+            args = SpentTimeArguments(task_id, assignee_id, days)
             task = TaskGateway.update_wasted_days(args)
         except SpentTimeArguments.BadArguments as e:
             return HttpResponseBadRequest(e.message)
