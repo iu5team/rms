@@ -13,6 +13,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from django.views.generic.edit import DeleteView
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import matplotlib
 
 from app.models import Employee, Task
 
@@ -88,29 +89,29 @@ class EmployeePlotSettingsForm(forms.Form):
 def plot_tasks(tasks, date_from, date_to):
     fig = plt.Figure(facecolor='white')
     ax = fig.add_subplot(111)
+    ax.grid(color = 'black', linestyle = ':')
 
     duration = (date_to - date_from).days
 
     days = []
     for task in tasks:
         start_date = task.creation_date
-        end_date = task.finish_date
+        end_date = task.finish_date + datetime.timedelta(1)
 
-        for i in range(duration):
+        for i in range(duration + 1):
             cur_date = date_from + datetime.timedelta(i)
-            if start_date < cur_date < end_date:
+            if start_date <= cur_date <= end_date:
                 days.append(i)
 
-    print days
-
     dates = []
-    for i in range(duration):
+    for i in range(duration + 1):
         date_name = date_from + datetime.timedelta(i)
         dates.append(str(date_name))
 
     counts, bins, patches = ax.hist(days, bins=duration, range=(1, duration), histtype='stepfilled')
-    ax.set_xticks(bins)
+    ax.set_xticks(bins[:])
     ax.set_xticklabels(dates, rotation=80)
+    # ax.set_xticks(ticks)
     ax.set_xlabel('date')
 
     ax.set_yticks(np.arange(0, counts.max() + 1))
@@ -119,6 +120,10 @@ def plot_tasks(tasks, date_from, date_to):
     ax.set_title('Tasks vs date')
     plt.rcParams["figure.figsize"] = [12, 6]
     fig.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.3)
+
+    # fig.autofmt_xdate()
+    # formatter = matplotlib.dates.DateFormatter("%b %d")
+    # ax.xaxis.set_major_formatter(formatter)
 
     graphic = cStringIO.StringIO()
 
@@ -134,7 +139,6 @@ def plot_tasks(tasks, date_from, date_to):
 class EmployeePlotView(FormView):
     template_name = 'app/employee_plot_view.html'
     form_class = EmployeePlotSettingsForm
-    success_url = '/thanks/'
 
     def form_valid(self, form):
         date_from = form.cleaned_data['date_from']

@@ -34,4 +34,5 @@ urlpatterns = [
     url(r'^task/delete/(?P<pk>[0-9]+)/$', app.views.task.TaskDelete.as_view(), name='task_confirm_delete'),
     url(r'^task', app.views.task.TaskCreate.as_view(), name='task_create'),
     url(r'^api/tasks_by_date', app.views.task.TasksByDate.as_view(), name='tasks_by_date'),
+    url(r'^grantt_diagram/$', app.views.grantt.GanttDiagramView.as_view(), name='grantt_diagram'),
 ]
