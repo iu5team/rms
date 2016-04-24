@@ -105,11 +105,3 @@ task = TaskGateway(
     status='122',
     assignee_id=4
 )
-# task.save()
-# task.title = 'fuck'
-# task.save()
-
-# t = TaskGateway.find_by_id(20)
-# t.delete()
-tasks = TaskGateway.find_by_title('fuc', contains=True)
-a = 1 + 1
