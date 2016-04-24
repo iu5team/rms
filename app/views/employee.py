@@ -12,7 +12,7 @@ from django.views.generic import DetailView, View, FormView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from django.views.generic.edit import DeleteView
-from matplotlib.backends.backend_agg import FigureCanvas
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
 from app.models import Employee, Task
 
