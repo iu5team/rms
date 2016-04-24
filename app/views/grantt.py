@@ -103,7 +103,7 @@ class GanttDiagramView(FormView):
         context = {}
         context['form'] = GanttDiagramSettingsForm(form.data)
 
-        tasks = Task.objects.filter(Q(creation_date__gte=date_from) | Q(finish_date__lte=date_to))
+        tasks = Task.objects.filter(~Q(assignee=None) & Q(creation_date__gte=date_from) & Q(finish_date__lte=date_to))
         context['graphic'] = plot_gantt_diagram(tasks, date_from, date_to)
 
         return render(self.request, self.template_name, context)
