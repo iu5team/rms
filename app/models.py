@@ -6,6 +6,7 @@
 from __future__ import unicode_literals
 import datetime
 
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 
@@ -16,8 +17,15 @@ class Position(models.Model):
     Поле =- название должности
     Мин. зарплата
     """
+
+    class Validators:
+        @staticmethod
+        def validate_salary(value):
+            if value < 6500:
+                raise ValidationError('Слишком маленькая зарплата!')
+
     title = models.CharField(max_length=100, null=False)
-    min_salary = models.IntegerField(null=False)
+    min_salary = models.IntegerField(null=False, validators=[Validators.validate_salary])
 
     def __unicode__(self):
         return self.title
@@ -67,7 +75,7 @@ class Employee(models.Model):
     name = models.CharField(max_length=100, null=False)
     manager = models.ForeignKey('Employee', null=True, blank=True)
     position = models.ForeignKey(Position, null=True)
-    salary = models.IntegerField(blank=True)
+    salary = models.IntegerField(blank=True, validators=[Position.Validators.validate_salary])
 
     def set_manager(self, manager):
         """

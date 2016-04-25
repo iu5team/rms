@@ -27,6 +27,7 @@ class EmployeeCreate(CreateView):
     success_url = reverse_lazy('employee_list')
 
 
+
 class EmployeeList(ListView):
     model = Employee
     template_name = 'employees_list.html'
