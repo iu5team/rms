@@ -1,11 +1,8 @@
 
 class Model:
-    def __init__(self):
-        pass
-
-    @staticmethod
-    def create():
-        pass
+    def __init__(self, **kwargs):
+        for field in kwargs:
+            setattr(self, field, kwargs[field])
 
     def update(self):
         pass

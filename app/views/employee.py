@@ -36,7 +36,7 @@ class EmployeeList(ListView):
         query = self.request.GET.get('query')
 
         if query:
-            employees = Employee.objects.filter(name__contains=query)
+            employees = alekseyl.employee.Employee.find_by_name(query)
         else:
             employees = Employee.objects.all()
 
@@ -63,10 +63,10 @@ class EmployeeDetail(DetailView):
         context = super(EmployeeDetail, self).get_context_data(**kwargs)
         pk = context['employee'].id
 
-        tasks = Task.objects.filter(assignee=pk)
+        tasks = alekseyl.task.Task.find_by_assignee(pk)
         context['tasks'] = tasks
-        context['tasks_done'] = Task.objects.filter(Q(assignee=pk) & Q(status='done'))
-        context['tasks_undone'] = Task.objects.filter(Q(assignee=pk) & ~Q(status='done'))
+        context['tasks_done'] = filter(lambda task: task.status == 'done', tasks)
+        context['tasks_undone'] = filter(lambda task: task.status != 'done', tasks)
         context['tasks_dates'] = map(lambda task: task.creation_date, tasks)
 
         return context
@@ -86,13 +86,12 @@ class EmployeePlotView(FormView):
         date_to = form.cleaned_data['date_to']
 
         employee_id = self.kwargs['pk']
-        tasks = Task.objects.filter(assignee=employee_id)
 
         context = {}
         context['form'] = EmployeePlotSettingsForm(form.data)
 
         employee = alekseyl.employee.Employee.get(employee_id)
-        context['employee'] = employee.data
+        context['employee'] = employee
         context['graphic'] = employee.plot_tasks(date_from, date_to)
 
         return render(self.request, self.template_name, context)

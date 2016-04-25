@@ -11,6 +11,7 @@ from django.views.generic.detail import DetailView
 
 from app.models import Task, Employee
 import app.views.gateway.task_gateway
+from app.views import alekseyl
 from app.views.gateway.task_gateway import TaskGateway, SpentTimeArguments
 
 
@@ -45,7 +46,7 @@ class TaskList(ListView):
         query = self.request.GET.get('query')
 
         if query:
-            tasks = Task.objects.filter(title__contains=query)
+            tasks = alekseyl.task.Task.find_by_title(query)
         else:
             tasks = Task.objects.all()
 

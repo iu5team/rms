@@ -6,7 +6,7 @@
     <section class="search">
         <form>
             <div class="input-group">
-                <input type="text" class="form-control" name="query" value="{{ query }}" placeholder="Search for...">
+                <input type="text" class="form-control" name="query" value="{{ query | default:'' }}" placeholder="Search for...">
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="submit">Search</button>
                 </span>

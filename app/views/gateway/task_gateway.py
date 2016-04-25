@@ -1,6 +1,6 @@
 import datetime
 
-from app.views.gateway.gateway import Gateway, GatewayConnection
+from app.views.gateway.gateway import Gateway, Connection
 
 
 class TaskGateway(Gateway):
@@ -100,10 +100,10 @@ class TaskGateway(Gateway):
             query_sql = " = ?"
             query_args.append(title)
         res = c.execute("SELECT * FROM {} WHERE `title` {}".format(cls.TABLE_NAME, query_sql), query_args)
-        desc = GatewayConnection.get_cursor_description(res)
+        desc = Connection.get_cursor_description(res)
         result = []
         for row in res:
-            d = GatewayConnection.row_to_dict(row, desc)
+            d = Connection.row_to_dict(row, desc)
             d = cls(__exists__=True, **d)
             result.append(d)
         return result
