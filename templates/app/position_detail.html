@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>{{ task.title }}</h1>
+    <ul>
+        <li>Название: {{ position.title }}</li>
+        <li>Минимальная зарплата: {{ position.min_salary }}</li>
+    </ul>
+
+    <section class="position__controls">
+        <a href="{% url 'position_update' position.id %}" >Обновить должность</a>
+        <a href="{% url 'position_confirm_delete' position.id %}" >Удалить должность</a>
+    </section>
+
+{% endblock %}

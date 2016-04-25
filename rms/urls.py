@@ -35,4 +35,12 @@ urlpatterns = [
     url(r'^task', app.views.task.TaskCreate.as_view(), name='task_create'),
     url(r'^api/tasks_by_date', app.views.task.TasksByDate.as_view(), name='tasks_by_date'),
     url(r'^grantt_diagram/$', app.views.grantt.GanttDiagramView.as_view(), name='grantt_diagram'),
+    url(r'^positions', app.views.position.PositionList.as_view(), name='position_list'),
+    url(r'^position/(?P<pk>[0-9]+)/$', app.views.position.PositionDetail.as_view(), name='position_detail'),
+    url(r'^position/update/(?P<pk>[0-9]+)/$', app.views.position.PositionUpdate.as_view(), name='position_update'),
+    url(r'^position/delete/(?P<pk>[0-9]+)/$', app.views.position.PositionDelete.as_view(), name='position_confirm_delete'),
+    url(r'^position', app.views.position.PositionCreate.as_view(), name='position_create'),
+
+
+
 ]

@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Должности</h1>
+
+    <section class="search">
+        <form>
+            <div class="input-group">
+                <input type="text" class="form-control" name="query" value="{{ query }}" placeholder="Search for...">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">Search</button>
+                </span>
+            </div>
+        </form>
+    </section>
+
+    <hr>
+
+    <section class="list">
+        <ul>
+            {% for position in object_list %}
+                 <li><a href="{% url 'position_detail' position.id %}">{{ position.title }}</a></li>
+            {% empty %}
+                Нет должностей
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section class="add-section">
+        <a href="{% url 'position_create' %}">
+            <button type="button" class="btn btn-primary btn-sm center-block">Добавить должность</button>
+        </a>
+    </section>
+{% endblock %}

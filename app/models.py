@@ -14,8 +14,10 @@ class Position(models.Model):
     """
     Должность
     Поле =- название должности
+    Мин. зарплата
     """
     title = models.CharField(max_length=100, null=False)
+    min_salary = models.IntegerField(null=False)
 
     def __unicode__(self):
         return self.title
