@@ -1,46 +1,4 @@
-import abc
-import sqlite3
-from django.conf import settings
-
-
-class GatewayConnection(object):
-    obj = None
-
-    def __init__(self):
-        super(GatewayConnection, self).__init__()
-        self.db_name = settings.DATABASES['default']['NAME']
-        self.conn = sqlite3.connect(self.db_name,
-                                    detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES,
-                                    check_same_thread=False)
-
-    @classmethod
-    def get_connection(cls):
-        if cls.obj is None:
-            cls.obj = GatewayConnection()
-        return cls.obj.conn
-
-    @staticmethod
-    def get_cursor_description(cursor):
-        if cursor.description is not None:
-            return list(map(lambda l: list(l)[0], list(cursor.description)))
-        return None
-
-    @staticmethod
-    def row_to_dict(row, desc):
-        return dict(zip(desc, row))
-
-
-class DoesNotExist(Exception):
-    GATEWAY_CLASS = None
-
-    def __init__(self, entity_id=None):
-        self.entity_id = entity_id
-
-    def __str__(self):
-        if self.entity_id is not None:
-            return "Entity of type '{}' with id {} not found".format(self.GATEWAY_CLASS.TABLE_NAME, self.entity_id)
-        else:
-            return "Entity of type '{}' does not exists".format(self.GATEWAY_CLASS.TABLE_NAME)
+from app.utils.db_utils import *
 
 
 class Gateway(object):
@@ -72,17 +30,17 @@ class Gateway(object):
 
     @classmethod
     def get_conn(cls):
-        return GatewayConnection.get_connection()
+        return Connection.get_connection()
 
     @classmethod
     def find_by_id(cls, id):
         c = cls.get_conn().cursor()
         res = c.execute("SELECT * FROM {} WHERE `id` = ?".format(cls.TABLE_NAME), [id])
-        desc = GatewayConnection.get_cursor_description(res)
+        desc = Connection.get_cursor_description(res)
         row = res.fetchone()
         if row is None:
             raise cls().DoesNotExist(id)
-        d = GatewayConnection.row_to_dict(row, desc)
+        d = Connection.row_to_dict(row, desc)
         return cls(__exists__=True, **d)
 
     def save(self):

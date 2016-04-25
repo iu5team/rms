@@ -11,12 +11,14 @@ class GranttDiagram:
     def __init__(self):
         pass
 
+    @staticmethod
     def name_to_color(name):
         import hashlib
         sha = hashlib.sha1(name)
         color = sha.hexdigest()[:6]
         return '#' + color
 
+    @staticmethod
     def plot(tasks, date_from, date_to):
         fig = plt.Figure(facecolor='white')
         ax = fig.add_subplot(111)
@@ -28,7 +30,7 @@ class GranttDiagram:
             start_date = task.creation_date
             end_date = task.finish_date
             duration = (end_date - start_date).days
-            assignee = task.assignee.name
+            assignee = task.name
 
             ticks.append(start_date)
             ticks.append(end_date)
@@ -37,7 +39,7 @@ class GranttDiagram:
                     left=start_date,
                     height=0.1,
                     align='center',
-                    color=name_to_color(assignee),
+                    color=GranttDiagram.name_to_color(assignee),
                     alpha = 0.75,
                     label=assignee)
 
@@ -45,7 +47,7 @@ class GranttDiagram:
         ax.set_xlabel('date')
 
         ax.set_yticklabels(map(lambda task: task.title, tasks))
-        ax.set_yticks(np.arange(0, tasks.count()))
+        ax.set_yticks(np.arange(0, tasks.__len__()))
         ax.set_ylabel('tasks')
 
         ax.set_title('Gantt Diagram')
