@@ -69,7 +69,8 @@ class TaskDetail(DetailView):
             raise Http404()
 
         task = TaskGateway.find_by_id(pk)
-        task.assignee = Employee.objects.filter(pk=task.assignee_id).get()
+        task.assignee = Employee.get_by_id(task.assignee_id)
+        # task.assignee = Employee.objects.filter(pk=task.assignee_id).get()
         context = self.get_context_data(task=task)
         return self.render_to_response(context)
 

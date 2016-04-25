@@ -4,6 +4,8 @@
     Модели системы RMS
 """
 from __future__ import unicode_literals
+
+import abc
 import datetime
 
 from django.core.exceptions import ValidationError
@@ -11,27 +13,56 @@ from django.db import models
 from django.utils import timezone
 
 
-class Position(models.Model):
+class AbstractModelsMediator:
+    def __init__(self):
+        pass
+
+    @abc.abstractmethod
+    def get_by_id(self, id, model):
+        raise NotImplementedError()
+
+
+class ModelsMediator(AbstractModelsMediator):
+    def __init__(self):
+        AbstractModelsMediator.__init__(self)
+
+    def get_by_id(self, id, model):
+        return model.objects.filter(pk=id).get()
+
+MEDIATOR = ModelsMediator()
+
+
+class AbstractModel(object):
+    mediator = MEDIATOR
+
+    def __init__(self, *args, **kwargs):
+        super(AbstractModel, self).__init__()
+
+    @classmethod
+    def get_by_id(cls, id):
+        return cls.mediator.get_by_id(id, cls)
+
+
+def validate_salary(value):
+    if value < 6500:
+        raise ValidationError('Слишком маленькая зарплата!')
+
+
+class Position(models.Model, AbstractModel):
     """
     Должность
     Поле =- название должности
     Мин. зарплата
     """
 
-    class Validators:
-        @staticmethod
-        def validate_salary(value):
-            if value < 6500:
-                raise ValidationError('Слишком маленькая зарплата!')
-
     title = models.CharField(max_length=100, null=False)
-    min_salary = models.IntegerField(null=False, validators=[Validators.validate_salary])
+    min_salary = models.IntegerField(null=False, validators=[validate_salary])
 
     def __unicode__(self):
         return self.title
 
 
-class Task(models.Model):
+class Task(models.Model, AbstractModel):
     """
     Задача
     Поля:
@@ -62,7 +93,7 @@ class Task(models.Model):
         return self.title
 
 
-class Employee(models.Model):
+class Employee(models.Model, AbstractModel):
     """
         Модель сотрудника
 
@@ -75,7 +106,7 @@ class Employee(models.Model):
     name = models.CharField(max_length=100, null=False)
     manager = models.ForeignKey('Employee', null=True, blank=True)
     position = models.ForeignKey(Position, null=True)
-    salary = models.IntegerField(blank=True, validators=[Position.Validators.validate_salary])
+    salary = models.IntegerField(blank=True, validators=[validate_salary])
 
     def set_manager(self, manager):
         """
