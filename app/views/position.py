@@ -56,13 +56,13 @@ class PositionList(ListView):
         context = super(PositionList, self).get_context_data(**kwargs)
 
         # Add in the query
-        query = self.request.GET.get('query', '')
+        query = self.request.GET.get('query')
         context['query'] = query
 
         return context
 
     def get_queryset(self):
-        query = self.request.GET.get('query', '')
+        query = self.request.GET.get('query')
 
         if query:
             pos = Position.objects.filter(name__contains=query)

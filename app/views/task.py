@@ -36,13 +36,13 @@ class TaskList(ListView):
         context = super(TaskList, self).get_context_data(**kwargs)
 
         # Add in the query
-        query = self.request.GET.get('query', '')
+        query = self.request.GET.get('query')
         context['query'] = query
 
         return context
 
     def get_queryset(self):
-        query = self.request.GET.get('query', '')
+        query = self.request.GET.get('query')
 
         if query:
             tasks = Task.objects.filter(title__contains=query)
