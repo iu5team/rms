@@ -9,7 +9,6 @@ from django.views.generic.edit import DeleteView
 from django.views.generic.detail import DetailView
 
 from app.models import Position, Employee
-from app.views import PositionDeleter
 
 
 class PositionCreate(CreateView):
@@ -71,11 +70,21 @@ class PositionList(ListView):
 
         return pos
 
+
 class PositionDelete(DeleteView):
     model = Position
     success_url = reverse_lazy('position_list')
 
-    def delete(self, request, *args, **kwargs):
-        pos = self.get_object()
+    def post(self, request, *args, **kwargs):
+        id = self.kwargs['pk']
+        PositionServices.delete(id)
+        return redirect(self.success_url)
+
+
+class PositionServices():
+    @staticmethod
+    def delete(position_id):
+        pos = Position.objects.filter(pk=position_id).get()
         Employee.objects.filter(position=pos).update(position=None)
-        return super(PositionDelete, self).delete(request, *args, **kwargs)
+        pos.delete()
+        return pos

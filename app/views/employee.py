@@ -17,7 +17,6 @@ class EmployeeCreate(CreateView):
     success_url = reverse_lazy('employee_list')
 
 
-
 class EmployeeList(ListView):
     model = Employee
     template_name = 'employees_list.html'
@@ -52,24 +51,6 @@ class EmployeeDelete(DeleteView):
         Employee.objects.filter(manager=employee).update(manager=None)
         Task.objects.filter(assignee=employee).update(assignee=None)
         return super(EmployeeDelete, self).delete(request, *args, **kwargs)
-
-
-class EmployeeDetail(DetailView):
-    model = Employee
-    fields = ['name', 'manager', 'position', 'salary']
-    template_name_suffix = '_detail'
-
-    def get_context_data(self, **kwargs):
-        context = super(EmployeeDetail, self).get_context_data(**kwargs)
-        pk = context['employee'].id
-
-        tasks = alekseyl.task.Task.find_by_assignee(pk)
-        context['tasks'] = tasks
-        context['tasks_done'] = filter(lambda task: task.status == 'done', tasks)
-        context['tasks_undone'] = filter(lambda task: task.status != 'done', tasks)
-        context['tasks_dates'] = map(lambda task: task.creation_date, tasks)
-
-        return context
 
 
 class EmployeePlotSettingsForm(forms.Form):
@@ -108,3 +89,27 @@ class EmployeeUpdate(UpdateView):
 
         if employee_id:
             return Employee.objects.filter(pk=employee_id)
+
+
+class EmployeeDetail(DetailView):
+    model = Employee
+    fields = ['name', 'manager', 'position', 'salary']
+    template_name_suffix = '_detail'
+    self.implementation = EmployeeImplementation(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        self.implementation.get_context_data(self, **kwargs)
+
+
+class EmployeeImplementation():
+    def get_context_data(self, **kwargs):
+        context = super(EmployeeDetail, self).get_context_data(**kwargs)
+        pk = context['employee'].id
+
+        tasks = alekseyl.task.Task.find_by_assignee(pk)
+        context['tasks'] = tasks
+        context['tasks_done'] = filter(lambda task: task.status == 'done', tasks)
+        context['tasks_undone'] = filter(lambda task: task.status != 'done', tasks)
+        context['tasks_dates'] = map(lambda task: task.creation_date, tasks)
+
+        return context
