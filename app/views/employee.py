@@ -9,6 +9,7 @@ from django.views.generic.list import ListView
 
 from app.models import Employee, Task
 from app.views import alekseyl
+import app.views.alekseyl.task
 
 
 class EmployeeCreate(CreateView):
@@ -95,15 +96,21 @@ class EmployeeDetail(DetailView):
     model = Employee
     fields = ['name', 'manager', 'position', 'salary']
     template_name_suffix = '_detail'
-    self.implementation = EmployeeImplementation(*args, **kwargs)
+
+    def __init__(self, **kwargs):
+        super(EmployeeDetail, self).__init__(**kwargs)
+        self.implementation = EmployeeImplementation(**kwargs)
 
     def get_context_data(self, **kwargs):
-        self.implementation.get_context_data(self, **kwargs)
+        context = super(EmployeeDetail, self).get_context_data(**kwargs)
+        self.implementation.get_context_data(context=context)
 
 
 class EmployeeImplementation():
-    def get_context_data(self, **kwargs):
-        context = super(EmployeeDetail, self).get_context_data(**kwargs)
+    def __init__(self, **kwargs):
+        pass
+
+    def get_context_data(self, context):
         pk = context['employee'].id
 
         tasks = alekseyl.task.Task.find_by_assignee(pk)
