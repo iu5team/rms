@@ -6,3 +6,13 @@ html {
 .calendar-tasks {
     margin-top: 20px;
 }
+
+.calendar-medical a{
+    background: #b13424 none !important;
+    color: White !important;
+}
+
+.calendar-vacation a{
+    background: #516cb1 none !important;
+    color: White !important;
+}

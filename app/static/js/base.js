@@ -2,7 +2,7 @@
 $(function () {
     $(".datepicker").datepicker();
 
-    $(".datepicker-inline").datepicker({
+    $(".datepicker-employee-calendar").datepicker({
         inline: true,
         dateFormat: 'yy-mm-dd',
         onSelect: function(dateText, inst) {
@@ -23,8 +23,23 @@ $(function () {
         },
         beforeShowDay: function(date){
             var allowedTasksDates = window.allowedTasksDates;
-            if (typeof(allowedTasksDates ) !== 'undefined' && allowedTasksDates != null && allowedTasksDates.length > 0) {
-                var string = $.datepicker.formatDate('yy-mm-dd', date);
+            var vacationDates = window.vacationDates;
+            var medicalDates = window.medicalDates;
+            var string;
+            if (vacationDates != null) {
+                string = $.datepicker.formatDate('yy-mm-dd', date);
+                if (vacationDates.indexOf(string) != -1) {
+                    return [true, 'calendar-vacation'];
+                }
+            }
+            if (medicalDates != null) {
+                string = $.datepicker.formatDate('yy-mm-dd', date);
+                if (medicalDates.indexOf(string) != -1) {
+                    return [true, 'calendar-medical'];
+                }
+            }
+            if (allowedTasksDates != null) {
+                string = $.datepicker.formatDate('yy-mm-dd', date);
                 return [allowedTasksDates.indexOf(string) != -1];
             }
             return [1]
