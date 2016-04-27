@@ -11,6 +11,7 @@ class Model:
 
     @staticmethod
     def get(pk):
+        # type: (object) -> object
         pass
 
     def delete(self):

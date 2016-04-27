@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>{{ calendar.title }}</h1>
+    <ul>
+        <li>Сотрудник: <a href="{% url 'employee_detail' calendar.person_id %}">{{ calendar.person.name }}</a></li>
+        <li>Минимальная зарплата: {{ calendar.date }}</li>
+        <li>Минимальная зарплата: {{ calendar.type }}</li>
+    </ul>
+
+    <section class="position__controls">
+        <a href="{% url 'calendar_update' calendar.id %}" >Обновить отметку</a>
+        <a href="{% url 'calendar_confirm_delete' calendar.id %}" >Удалить отметку</a>
+    </section>
+
+{% endblock %}

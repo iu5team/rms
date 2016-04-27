@@ -40,7 +40,8 @@ urlpatterns = [
     url(r'^position/update/(?P<pk>[0-9]+)/$', app.views.position.PositionUpdate.as_view(), name='position_update'),
     url(r'^position/delete/(?P<pk>[0-9]+)/$', app.views.position.PositionDelete.as_view(), name='position_confirm_delete'),
     url(r'^position', app.views.position.PositionCreate.as_view(), name='position_create'),
-
-
-
+    url(r'^calendar/(?P<pk>[0-9]+)/$', app.views.calendar.CalendarDetail.as_view(), name='calendar_detail'),
+    url(r'^calendar/update/(?P<pk>[0-9]+)/$', app.views.calendar.CalendarUpdate.as_view(), name='calendar_update'),
+    url(r'^calendar/delete/(?P<pk>[0-9]+)/$', app.views.calendar.CalendarDelete.as_view(), name='calendar_confirm_delete'),
+    url(r'^calendar', app.views.calendar.CalendarCreate.as_view(), name='calendar_create'),
 ]
