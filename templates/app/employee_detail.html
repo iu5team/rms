@@ -16,6 +16,7 @@
 
     <section class="employee__controls">
         <a href="{% url 'employee_update' employee.id %}" >Update employee</a>
+        <a href="{% url 'calendar_create' %}" >Добавить отметку календаря</a>
         <a href="{% url 'employee_confirm_delete' employee.id %}" >Delete employee</a>
     </section>
 
