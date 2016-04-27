@@ -46,7 +46,7 @@ class CalendarDetail(DetailView):
 
 class CalendarUpdate(UpdateView):
     model = Calendar
-    fields = ['person', 'date', 'type']
+    fields = ['date', 'type']
     template_name_suffix = '_update'
     success_url = reverse_lazy('employee_list')  # надо выводить на страницу сотрудника, для которого добавляли!
 
@@ -56,7 +56,25 @@ class CalendarUpdate(UpdateView):
         if cal_id:
             return Calendar.objects.filter(pk=cal_id)
 
+    def get_form(self, form_class=None):
+        form = super(CalendarUpdate, self).get_form(form_class)
+        datepicker_class = 'datepicker'
+        form.fields['date'].widget.attrs.update({'class': datepicker_class})
+        return form
+
+    def get_success_url(self):
+        id = int(self.kwargs['pk'])
+        employee = self.object.person
+        self.success_url = reverse_lazy('employee_detail', args=[employee.id])
+        return super(CalendarUpdate, self).get_success_url()
+
 
 class CalendarDelete(DeleteView):
     model = Calendar
     success_url = reverse_lazy('employee_list')  # надо выводить на страницу сотрудника, для которого добавляли!
+
+    def get_success_url(self):
+        id = int(self.kwargs['pk'])
+        employee = self.object.person
+        self.success_url = reverse_lazy('employee_detail', args=[employee.id])
+        return super(CalendarDelete, self).get_success_url()

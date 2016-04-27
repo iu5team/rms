@@ -125,7 +125,7 @@ class EmployeeImplementation():
 
         vacation_dates = Calendar.objects.filter(person_id=pk, type=Calendar.vyh)
         medical_dates = Calendar.objects.filter(person_id=pk, type=Calendar.bol)
-        context['vacation_dates'] = map(lambda entry: entry.date, vacation_dates)
-        context['medical_dates'] = map(lambda entry: entry.date, medical_dates)
+        context['vacation_dates'] = map(lambda entry: (entry.id, entry.date), vacation_dates)
+        context['medical_dates'] = map(lambda entry: (entry.id, entry.date), medical_dates)
 
         return context

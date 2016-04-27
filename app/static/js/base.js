@@ -28,13 +28,13 @@ $(function () {
             var string;
             if (vacationDates != null) {
                 string = $.datepicker.formatDate('yy-mm-dd', date);
-                if (vacationDates.indexOf(string) != -1) {
+                if (vacationDates[string]) {
                     return [true, 'calendar-vacation'];
                 }
             }
             if (medicalDates != null) {
                 string = $.datepicker.formatDate('yy-mm-dd', date);
-                if (medicalDates.indexOf(string) != -1) {
+                if (medicalDates[string]) {
                     return [true, 'calendar-medical'];
                 }
             }
@@ -44,5 +44,28 @@ $(function () {
             }
             return [1]
         }
+    });
+
+    var clicks = 0;
+    var isDblClick = false;
+    $('.datepicker-employee-calendar a').contextmenu(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log(clicks, isDblClick);
+        var allSpecialDates = window.allSpecialDates;
+
+        var $this = $(this);
+        var $datepicker = $this.parents('.datepicker-employee-calendar');
+        var selectedDay = $this.text();
+
+        var date = $datepicker.datepicker("getDate");
+        date.setDate(selectedDay);
+
+        var dateString = $.datepicker.formatDate('yy-mm-dd', date);
+        var obj = allSpecialDates[dateString];
+        if (obj) {
+            console.log(obj);
+        }
+        window.location.href = '/calendar/update/' + obj;
     });
 });

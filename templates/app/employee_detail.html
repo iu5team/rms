@@ -48,20 +48,24 @@
         <div class="calendar-tasks"></div>
         <script type="application/javascript">
             var allowedTasksDates = [];
-            var vacationDates = [];
-            var medicalDates = [];
+            var vacationDates = {};
+            var medicalDates = {};
+            var allSpecialDates = {};
             {% for task_date in tasks_dates %}
                 allowedTasksDates.push("{{ task_date | date:"Y-m-d" }}");
             {% endfor %}
-            {% for date in vacation_dates %}
-                vacationDates.push("{{ date | date:"Y-m-d" }}");
+            {% for date_id, date in vacation_dates %}
+                vacationDates["{{ date | date:"Y-m-d" }}"] = {{ date_id }};
+                allSpecialDates["{{ date | date:"Y-m-d" }}"] = {{ date_id }};
             {% endfor %}
-            {% for date in medical_dates %}
-                medicalDates.push("{{ date | date:"Y-m-d" }}");
+            {% for date_id, date in medical_dates %}
+                medicalDates["{{ date | date:"Y-m-d" }}"] = {{ date_id }};
+                allSpecialDates["{{ date | date:"Y-m-d" }}"] = {{ date_id }};
             {% endfor %}
             window.allowedTasksDates = allowedTasksDates;
             window.vacationDates = vacationDates;
             window.medicalDates = medicalDates;
+            window.allSpecialDates = allSpecialDates;
         </script>
     </section>
 
