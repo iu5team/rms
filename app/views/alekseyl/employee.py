@@ -15,6 +15,12 @@ from app.views.alekseyl.task import Task
 
 
 class Employee(Model):
+    id = None
+    name = None
+    position_id = None
+    salary = None
+    manager_id = None
+
     def __init__(self, **kwargs):
         Model.__init__(self, **kwargs)
 

@@ -3,6 +3,15 @@ from app.views.alekseyl.model import Model
 
 
 class Task(Model):
+    id = None
+    creation_date = None
+    finish_date = None
+    status = None
+    description = None
+    title = None
+    assignee_id = None
+    wasted_days = None
+
     def __init__(self, **kwargs):
         Model.__init__(self, **kwargs)
 
