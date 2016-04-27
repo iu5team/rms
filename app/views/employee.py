@@ -1,3 +1,5 @@
+import copy
+
 from django import forms
 from django.core.urlresolvers import reverse_lazy
 from django.db.models import Q
@@ -8,6 +10,7 @@ from django.views.generic.edit import DeleteView
 from django.views.generic.list import ListView
 
 from app.models import Employee, Task
+from app.utils.cloneable import ICloneable
 from app.views import alekseyl
 import app.views.alekseyl.task
 
@@ -54,7 +57,7 @@ class EmployeeDelete(DeleteView):
         return super(EmployeeDelete, self).delete(request, *args, **kwargs)
 
 
-class EmployeePlotSettingsForm(forms.Form):
+class EmployeePlotSettingsForm(forms.Form, ICloneable):
     date_from = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
     date_to = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
 
@@ -70,7 +73,7 @@ class EmployeePlotView(FormView):
         employee_id = self.kwargs['pk']
 
         context = {}
-        context['form'] = EmployeePlotSettingsForm(form.data)
+        context['form'] = form.clone()
 
         employee = alekseyl.employee.Employee.get(employee_id)
         context['employee'] = employee
@@ -104,6 +107,7 @@ class EmployeeDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super(EmployeeDetail, self).get_context_data(**kwargs)
         self.implementation.get_context_data(context=context)
+        return context
 
 
 class EmployeeImplementation():

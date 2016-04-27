@@ -1,3 +1,5 @@
+import copy
+
 
 class Model:
     def __init__(self, **kwargs):
@@ -13,3 +15,4 @@ class Model:
 
     def delete(self):
         pass
+
