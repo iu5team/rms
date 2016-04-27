@@ -29,6 +29,7 @@ class ModelsMediator(AbstractModelsMediator):
     def get_by_id(self, id, model):
         return model.objects.filter(pk=id).get()
 
+
 MEDIATOR = ModelsMediator()
 
 
@@ -130,3 +131,21 @@ class Employee(models.Model, AbstractModel):
 
     def __unicode__(self):
         return "{}".format(self.name)
+
+
+class Calendar(models.Model):
+    """
+    Отметки о выходных и больничных
+    """
+    vyh ='выходной'
+    bol = 'больничный'
+    day_coice = ((vyh, 'выходной'), (bol, 'больничный'))
+    person = models.ForeignKey(Employee, null=False)
+    date = models.DateField(null=False)
+    type = models.CharField(max_length=10, null=False, choices=day_coice, default=vyh)
+
+    def set_person(self, person):
+        self.person = person
+        self.save()
+        return self
+

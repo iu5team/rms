@@ -9,7 +9,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.edit import DeleteView
 from django.views.generic.list import ListView
 
-from app.models import Employee, Task
+from app.models import Employee, Task, Calendar
 from app.utils.cloneable import ICloneable
 from app.views import alekseyl
 import app.views.alekseyl.task
@@ -122,5 +122,10 @@ class EmployeeImplementation():
         context['tasks_done'] = filter(lambda task: task.status == 'done', tasks)
         context['tasks_undone'] = filter(lambda task: task.status != 'done', tasks)
         context['tasks_dates'] = map(lambda task: task.creation_date, tasks)
+
+        vacation_dates = Calendar.objects.filter(person_id=pk, type=Calendar.vyh)
+        medical_dates = Calendar.objects.filter(person_id=pk, type=Calendar.bol)
+        context['vacation_dates'] = map(lambda entry: (entry.id, entry.date), vacation_dates)
+        context['medical_dates'] = map(lambda entry: (entry.id, entry.date), medical_dates)
 
         return context
