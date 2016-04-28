@@ -5,8 +5,8 @@
     <h1>{{ calendar.title }}</h1>
     <ul>
         <li>Сотрудник: <a href="{% url 'employee_detail' calendar.person_id %}">{{ calendar.person.name }}</a></li>
-        <li>Минимальная зарплата: {{ calendar.date }}</li>
-        <li>Минимальная зарплата: {{ calendar.type }}</li>
+        <li>Дата: {{ calendar.date }}</li>
+        <li>Тип отметки: {{ calendar.type }}</li>
     </ul>
 
     <section class="position__controls">

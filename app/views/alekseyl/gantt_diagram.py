@@ -7,14 +7,14 @@ import numpy as np
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
 
-class GranttDiagram:
+class GanttDiagram:
     def __init__(self):
         pass
 
     @staticmethod
     def name_to_color(name):
         import hashlib
-        sha = hashlib.sha1(name)
+        sha = hashlib.sha1(name.encode('utf8'))
         color = sha.hexdigest()[:6]
         return '#' + color
 
@@ -39,7 +39,7 @@ class GranttDiagram:
                     left=start_date,
                     height=0.1,
                     align='center',
-                    color=GranttDiagram.name_to_color(assignee),
+                    color=GanttDiagram.name_to_color(assignee),
                     alpha = 0.75,
                     label=assignee)
 

@@ -4,24 +4,24 @@
 
     <h1>{{ task.title }}</h1>
     <ul>
-        <li>Date created: {{ task.creation_date }}</li>
-        <li>Date finished: {{ task.finish_date }}</li>
-        <li>Assignee: <a href="{% url 'employee_detail' task.assignee_id %}">{{ task.assignee.name }}</a></li>
-        <li>Status: {{ task.status }}</li>
-        <li>Description: {{ task.description }}</li>
+        <li>Дата начала: {{ task.creation_date }}</li>
+        <li>Дата завершения: {{ task.finish_date }}</li>
+        <li>Ответственный: <a href="{% url 'employee_detail' task.assignee_id %}">{{ task.assignee.name }}</a></li>
+        <li>Статус: {{ task.status }}</li>
+        <li>Описание: {{ task.description }}</li>
         {% if task.wasted_days %}
-            <li>Days spent: {{ task.wasted_days }}</li>
+            <li>Дней затрачено: {{ task.wasted_days }}</li>
         {% endif %}
     </ul>
 
-    <a href="{% url 'task_update' task.id%}" >Update this task</a>
-    <a href="{% url 'task_confirm_delete' task.id%}" >Delete this task</a>
+    <a href="{% url 'task_update' task.id%}" >Обновить задачу</a>
+    <a href="{% url 'task_confirm_delete' task.id%}" >удалить задачу</a>
 
     <form method="post" action="{% url 'task_spent_time' task.id %}">
         {% csrf_token %}
         <input type="hidden" name="assignee_id" value="{{ task.assignee_id }}"/>
-        <input type="number" name="days" placeholder="Days spent" />
-        <input type="submit" value="Submit" />
+        <input type="number" name="days" placeholder="Дней затрачено" />
+        <input type="submit" value="Сохранить" />
     </form>
 
 {% endblock %}

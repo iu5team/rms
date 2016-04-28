@@ -1,5 +1,17 @@
 {% extends 'base.html' %}
 
+        {% block header %}
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li><a href="{% url 'index' %}">Старт!</a></li>
+                        <li><a href="{% url 'employee_list' %}">Сотрудники</a></li>
+                        <li><a href="{% url 'task_list' %}">Задачи</a></li>
+                        <li class="active"><a href="{% url 'gantt_diagram' %}">Диаграмма Ганта</a></li>
+                        <li><a href="{% url 'position_list' %}">Должности</a></li>
+                    </ul>
+                </div>
+        {% endblock %}
+
 {% block content %}
     <h1>Диаграмма Ганта</h1>
 
@@ -7,7 +19,7 @@
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            <input type="submit" value="Plot" />
+            <input type="submit" value="График" />
         </form>
     </section>
 
