@@ -48,7 +48,7 @@ class CalendarUpdate(UpdateView):
     model = Calendar
     fields = ['date', 'type']
     template_name_suffix = '_update'
-    success_url = reverse_lazy('employee_list')  # надо выводить на страницу сотрудника, для которого добавляли!
+    #success_url = reverse_lazy('employee_list')  # надо выводить на страницу сотрудника, для которого добавляли!
 
     def get_queryset(self):
         cal_id = int(self.kwargs['pk'])
@@ -71,7 +71,7 @@ class CalendarUpdate(UpdateView):
 
 class CalendarDelete(DeleteView):
     model = Calendar
-    success_url = reverse_lazy('employee_list')  # надо выводить на страницу сотрудника, для которого добавляли!
+    #success_url = reverse_lazy('employee_list')  # надо выводить на страницу сотрудника, для которого добавляли!
 
     def get_success_url(self):
         id = int(self.kwargs['pk'])

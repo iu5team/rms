@@ -102,11 +102,11 @@ class EmployeeDetail(DetailView):
 
     def __init__(self, **kwargs):
         super(EmployeeDetail, self).__init__(**kwargs)
-        self.implementation = EmployeeImplementation(**kwargs)
+        self.implementation = EmployeeUse2(**kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(EmployeeDetail, self).get_context_data(**kwargs)
-        self.implementation.get_context_data(context=context)
+        self.implementation.get_context_data_impl(context=context)
         return context
 
 
@@ -114,7 +114,30 @@ class EmployeeImplementation():
     def __init__(self, **kwargs):
         pass
 
-    def get_context_data(self, context):
+    def get_context_data_impl(self, context):
+        pass
+
+
+class EmployeeUse1(EmployeeImplementation):
+    def __init__(self, **kwargs):
+        pass
+
+    def get_context_data_impl(self, context):
+        pk = context['employee'].id
+
+        tasks = alekseyl.task.Task.find_by_assignee(pk)
+        context['tasks'] = tasks
+        context['tasks_done'] = filter(lambda task: task.status == 'done', tasks)
+        context['tasks_undone'] = filter(lambda task: task.status != 'done', tasks)
+        context['tasks_dates'] = map(lambda task: task.creation_date, tasks)
+        return context
+
+
+class EmployeeUse2(EmployeeImplementation):
+    def __init__(self, **kwargs):
+        pass
+
+    def get_context_data_impl(self, context):
         pk = context['employee'].id
 
         tasks = alekseyl.task.Task.find_by_assignee(pk)
