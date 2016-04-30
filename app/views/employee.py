@@ -3,7 +3,7 @@ import copy
 from django import forms
 from django.core.urlresolvers import reverse_lazy
 from django.db.models import Q
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import DetailView, FormView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.edit import DeleteView
@@ -50,11 +50,10 @@ class EmployeeDelete(DeleteView):
     model = Employee
     success_url = reverse_lazy('employee_list')
 
-    def delete(self, request, *args, **kwargs):
-        employee = self.get_object()
-        Employee.objects.filter(manager=employee).update(manager=None)
-        Task.objects.filter(assignee=employee).update(assignee=None)
-        return super(EmployeeDelete, self).delete(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        empl_id = self.kwargs['pk']
+        Employee.delete(empl_id)
+        return redirect(self.success_url)
 
 
 class EmployeePlotSettingsForm(forms.Form, ICloneable):

@@ -129,6 +129,14 @@ class Employee(models.Model, AbstractModel):
         self.save()
         return self
 
+
+    @staticmethod
+    def delete(employee_id):
+        employee = Employee.objects.filter(pk=employee_id).get()
+        Employee.objects.filter(manager=employee).update(manager=None)
+        employee.delete()
+        return employee
+
     def __unicode__(self):
         return "{}".format(self.name)
 
