@@ -51,8 +51,8 @@ class EmployeeDelete(DeleteView):
     success_url = reverse_lazy('employee_list')
 
     def post(self, request, *args, **kwargs):
-        empl_id = self.kwargs['pk']
-        Employee.delete(empl_id)
+        empl_id = int(self.kwargs['pk'])
+        Employee.my_delete(empl_id)
         return redirect(self.success_url)
 
 
