@@ -33,36 +33,3 @@ class TaskGateway(Gateway):
             d = cls(__exists__=True, **d)
             result.append(d)
         return result
-
-
-class SpentTimeArguments:
-
-    class BadArguments(Exception):
-        pass
-
-    def __init__(self, task_id, assignee_id, days):
-        self.task_id = self._parse_task_id(task_id)
-        self.assignee_id = self._parse_assignee_id(assignee_id)
-        self.days = self._parse_days(days)
-
-    def _parse_task_id(self, task_id):
-        try:
-            return int(task_id)
-        except ValueError:
-            raise self.BadArguments("Bad task_id")
-
-    def _parse_assignee_id(self, assignee_id):
-        if assignee_id is None:
-            raise self.BadArguments("Bad assignee_id")
-        try:
-            return int(assignee_id)
-        except ValueError:
-            raise self.BadArguments("Bad assignee_id")
-
-    def _parse_days(self, days):
-        if days is None:
-            raise self.BadArguments("Bad assignee_id")
-        try:
-            return int(days)
-        except ValueError:
-            raise self.BadArguments("Bad days")

@@ -12,8 +12,8 @@ from django.views.generic.detail import DetailView
 from app.models import Task, Employee
 import app.views.gateway.task_gateway
 from app.views import alekseyl
-from app.views.gateway.task_gateway import TaskGateway, SpentTimeArguments
-from app.views.igor.domain import RMSTask, RMSEmployee
+from app.views.gateway.task_gateway import TaskGateway
+from app.views.igor.domain import RMSTask, RMSEmployee, SpentTimeArguments
 
 
 class TaskCreate(CreateView):
