@@ -2,12 +2,11 @@ from django import forms
 from django.shortcuts import render
 from django.views.generic import FormView
 
-from app.utils.cloneable import ICloneable
-from app.views.alekseyl.grantt_diagram import GranttDiagram
-from app.views.alekseyl.task import Task
+from app.views.alekseyl.active_record.task import Task
+from app.views.alekseyl.domain_model.gantt_diagram import GanttDiagram
 
 
-class GanttDiagramSettingsForm(forms.Form, ICloneable):
+class GanttDiagramSettingsForm(forms.Form):
     date_from = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
     date_to = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
 
@@ -22,7 +21,7 @@ class GanttDiagramView(FormView):
         tasks = Task.find(date_from, date_to)
 
         context = {}
-        context['form'] = form.clone()
-        context['graphic'] = GranttDiagram.plot(tasks, date_from, date_to)
+        context['form'] = form
+        context['graphic'] = GanttDiagram.plot(tasks, date_from, date_to)
 
         return render(self.request, self.template_name, context)

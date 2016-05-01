@@ -1,1 +1,1 @@
-from app.views.alekseyl import employee
+from app.views.alekseyl.active_record import employee

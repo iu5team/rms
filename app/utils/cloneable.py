@@ -1,9 +1,7 @@
-import copy
 
-
-class ICloneable():
+class Cloneable():
     def __init__(self):
         pass
 
     def clone(self):
-        return copy.deepcopy(self)
+        pass

@@ -1,7 +1,5 @@
-import copy
 
-
-class Model:
+class Model(object):
     def __init__(self, **kwargs):
         for field in kwargs:
             setattr(self, field, kwargs[field])
@@ -11,7 +9,6 @@ class Model:
 
     @staticmethod
     def get(pk):
-        # type: (object) -> object
         pass
 
     def delete(self):
