@@ -57,7 +57,7 @@ class TaskList(ListView):
         query = self.request.GET.get('query')
 
         if query:
-            tasks = alekseyl.task.Task.find_by_title(query)
+            tasks = alekseyl.domain_model.task.Task.find_by_title(query)
         else:
             tasks = Task.objects.all()
 
