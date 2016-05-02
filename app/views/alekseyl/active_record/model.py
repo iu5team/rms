@@ -60,7 +60,7 @@ class Model(object):
         self._id = c.lastrowid
         self.__exists__ = True
 
-    def save(self):
+    def update(self):
         if self.__exists__:
             if self.id is None:
                 raise Exception('Unable to save')

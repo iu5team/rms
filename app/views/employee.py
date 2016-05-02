@@ -94,7 +94,7 @@ class EmployeeUpdate(UpdateView):
     def change_name(self):
         emp = alekseyl.active_record.Employee.find_by_id(id)
         emp.name = self.kwargs['name']
-        emp.save()
+        emp.update()
 
     def get_queryset(self):
         employee_id = int(self.kwargs['pk'])
