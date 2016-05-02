@@ -132,7 +132,7 @@ class Employee(models.Model, AbstractModel):
 
 
     @staticmethod
-    def my_delete(employee_id):
+    def delete(employee_id):
         employee = Employee.objects.filter(pk=employee_id).get()
         Employee.objects.filter(manager=employee).update(manager=None)
         employee.delete()
