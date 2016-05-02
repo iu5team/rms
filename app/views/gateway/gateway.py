@@ -3,7 +3,7 @@ from app.utils.db_utils import *
 
 class Gateway(object):
     TABLE_NAME = None
-    MAPPING = None
+    FIELDS = None
 
     DoesNotExist = None
 
@@ -11,8 +11,14 @@ class Gateway(object):
         super(Gateway, self).__init__()
         self.__exists__ = False
         self.__dirty__ = set()
-        self._id = kwargs.get('id')
 
+        self._id = kwargs.get('id')
+        self._fields = {}
+        for field_name in self.FIELDS:
+            field_value = kwargs.get(field_name)
+            self._fields[field_name] = field_value
+
+        self.__exists__ = kwargs.pop('__exists__', False)
         cls = self.__class__
 
         class _DoesNotExist(DoesNotExist):
@@ -20,9 +26,21 @@ class Gateway(object):
 
         self.DoesNotExist = _DoesNotExist
 
-    @property
-    def id(self):
-        return self._id
+    def __getattribute__(self, key):
+        try:
+            return super(Gateway, self).__getattribute__(key)
+        except AttributeError:
+            if key in self.FIELDS:
+                return self._fields[key]
+            else:
+                raise AttributeError('Attribute {} is unknown'.format(key))
+
+    def __setattr__(self, key, value):
+        if key in self.FIELDS:
+            self._fields[key] = value
+            self.__dirty__.add(key)
+        else:
+            return super(Gateway, self).__setattr__(key, value)
 
     @property
     def conn(self):
@@ -53,7 +71,7 @@ class Gateway(object):
                 update_args = []
                 for attr in self.__dirty__:
                     update_sql.append('{} = ?'.format(attr))
-                    update_args.append(getattr(self, '_' + attr))
+                    update_args.append(self._fields[attr])
                 update_sql = ','.join(update_sql)
                 update_args.append(self.id)
 
@@ -66,11 +84,11 @@ class Gateway(object):
             insert_sql = []
             insert_sql_values = []
             insert_args = []
-            for _, attr_name in iter(self.MAPPING.items()):
+            for attr_name in self.FIELDS:
                 if attr_name != 'id':
                     insert_sql.append(attr_name)
                     insert_sql_values.append('?')
-                    insert_args.append(getattr(self, '_' + attr_name))
+                    insert_args.append(self._fields[attr_name])
             insert_sql = ','.join(insert_sql)
             insert_sql_values = ','.join(insert_sql_values)
 
@@ -82,9 +100,7 @@ class Gateway(object):
             self.conn.commit()
             self._id = c.lastrowid
             self.__exists__ = True
-            pass
 
-    @abc.abstractmethod
     def delete(self, *args, **kwargs):
         if not self.__exists__ or self.id is None:
             raise self.DoesNotExist()
@@ -92,3 +108,27 @@ class Gateway(object):
         self.conn.execute("DELETE FROM {} WHERE `id` = ?".format(self.TABLE_NAME), [self.id])
         self.conn.commit()
         self.__exists__ = False
+
+    @classmethod
+    def find_by_fields(cls, **fields):
+        if len(fields) == 0:
+            return None
+
+        c = cls.get_conn().cursor()
+        query_args = []
+        query_sql = []
+
+        for field_name, field_value in fields.items():
+            query_sql.append('`{}` = ?'.format(field_name))
+            query_args.append(field_value)
+
+        query_sql = ' AND '.join(query_sql)
+
+        res = c.execute("SELECT * FROM {} WHERE ({})".format(cls.TABLE_NAME, query_sql), query_args)
+        desc = Connection.get_cursor_description(res)
+        result = []
+        for row in res:
+            d = Connection.row_to_dict(row, desc)
+            d = cls(__exists__=True, **d)
+            result.append(d)
+        return result

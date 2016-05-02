@@ -130,16 +130,31 @@ class Employee(models.Model, AbstractModel):
         self.save()
         return self
 
-
-    @staticmethod
-    def delete(employee_id):
-        employee = Employee.objects.filter(pk=employee_id).get()
-        Employee.objects.filter(manager=employee).update(manager=None)
-        employee.delete()
-        return employee
-
     def __unicode__(self):
         return "{}".format(self.name)
+
+
+    def EmplCreate(self):
+        pass
+
+    @staticmethod
+    def EmplRead(empl_id):
+        conn = Connection.get_connection()
+        cursor = conn.cursor()
+
+        res = cursor.execute('SELECT * FROM app_employee WHERE `id` = ? LIMIT 1', empl_id)
+        desc = Connection.get_cursor_description(res)
+        row = res.fetchone()
+        data = Connection.row_to_dict(row, desc)
+
+        emp = Employee(**data)
+        return emp
+
+    def EmplUpdate(self):
+        pass
+
+    def EmplDelete(self):
+        pass
 
 
 class Calendar(models.Model):

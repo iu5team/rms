@@ -1,18 +1,18 @@
-import copy
-
 from django import forms
 from django.core.urlresolvers import reverse_lazy
 from django.db.models import Q
+from django.shortcuts import render
+
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView, FormView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.edit import DeleteView
 from django.views.generic.list import ListView
 
-from app.models import Employee, Task, Calendar
-from app.utils.cloneable import ICloneable
+import app.views.alekseyl.active_record.task
+from app.models import Employee, Calendar, Task
 from app.views import alekseyl
-import app.views.alekseyl.task
+from app.views.alekseyl.domain_model.employee import EmployeeException
 
 
 class EmployeeCreate(CreateView):
@@ -39,7 +39,10 @@ class EmployeeList(ListView):
         query = self.request.GET.get('query')
 
         if query:
-            employees = alekseyl.employee.Employee.find_by_name(query)
+            try:
+                employees = app.views.alekseyl.domain_model.employee.Employee.find_by_name(query)
+            except EmployeeException:
+                employees = []
         else:
             employees = Employee.objects.all()
 
@@ -56,7 +59,7 @@ class EmployeeDelete(DeleteView):
         return redirect(self.success_url)
 
 
-class EmployeePlotSettingsForm(forms.Form, ICloneable):
+class EmployeePlotSettingsForm(forms.Form):
     date_from = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
     date_to = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
 
@@ -72,9 +75,9 @@ class EmployeePlotView(FormView):
         employee_id = self.kwargs['pk']
 
         context = {}
-        context['form'] = form.clone()
+        context['form'] = form
 
-        employee = alekseyl.employee.Employee.get(employee_id)
+        employee = app.views.alekseyl.active_record.employee.Employee.get(employee_id)
         context['employee'] = employee
         context['graphic'] = employee.plot_tasks(date_from, date_to)
 
@@ -87,11 +90,19 @@ class EmployeeUpdate(UpdateView):
     template_name_suffix = '_update'
     success_url = reverse_lazy('employee_list')
 
+    # demonstration purpose method
+    def change_name(self):
+        emp = alekseyl.active_record.Employee.find_by_id(id)
+        emp.name = self.kwargs['name']
+        emp.update()
+
     def get_queryset(self):
         employee_id = int(self.kwargs['pk'])
+       # return Employee.read(self.kwargs['pk'])
 
         if employee_id:
-            return Employee.objects.filter(pk=employee_id)
+            Employee.objects.filter(pk=employee_id)
+            return Employee.read(employee_id)
 
 
 class EmployeeDetail(DetailView):
@@ -124,7 +135,7 @@ class EmployeeUse1(EmployeeImplementation):
     def get_context_data_impl(self, context):
         pk = context['employee'].id
 
-        tasks = alekseyl.task.Task.find_by_assignee(pk)
+        tasks = app.views.alekseyl.active_record.task.Task.find_by_assignee(pk)
         context['tasks'] = tasks
         context['tasks_done'] = filter(lambda task: task.status == 'done', tasks)
         context['tasks_undone'] = filter(lambda task: task.status != 'done', tasks)
@@ -139,7 +150,7 @@ class EmployeeUse2(EmployeeImplementation):
     def get_context_data_impl(self, context):
         pk = context['employee'].id
 
-        tasks = alekseyl.task.Task.find_by_assignee(pk)
+        tasks = app.views.alekseyl.active_record.task.Task.find_by_assignee(pk)
         context['tasks'] = tasks
         context['tasks_done'] = filter(lambda task: task.status == 'done', tasks)
         context['tasks_undone'] = filter(lambda task: task.status != 'done', tasks)
