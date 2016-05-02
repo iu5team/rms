@@ -80,15 +80,15 @@ class Position(models.Model, AbstractModel):
         return pos
 
     @staticmethod
-    def PosUpdate(empl_id):
+    def PosUpdate(pos_id):
         pass
 
     @staticmethod
-    def PosDelete(empl_id):
+    def PosDelete(pos_id):
         pass
 
 
-class CheckPosTitle(models.Model, Position):
+class CheckPosTitle(models.Model, AbstractModel):
     @staticmethod
     def has_title(value):
         if value.len < 4:
