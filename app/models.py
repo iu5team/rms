@@ -10,6 +10,7 @@ import datetime
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from app.utils.db_utils import *
 from django.utils import timezone
 
 
