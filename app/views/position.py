@@ -77,11 +77,11 @@ class PositionDelete(DeleteView):
 
     def post(self, request, *args, **kwargs):
         id = self.kwargs['pk']
-        PositionDeleteServices.delete(id)
+        PositionServices.delete(id)
         return redirect(self.success_url)
 
 
-class PositionDeleteServices():
+class PositionServices():
     @staticmethod
     def delete(position_id):
         pos = Position.objects.filter(pk=position_id).get()
