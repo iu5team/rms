@@ -1,5 +1,5 @@
 from app.utils.db_utils import Connection
-from app.views.alekseyl.active_record.model import Model
+from app.views.alekseyl.model import Model
 
 
 class Task(Model):
@@ -13,7 +13,7 @@ class Task(Model):
     wasted_days = None
 
     def __init__(self, **kwargs):
-        super(Task, self).__init__(**kwargs)
+        Model.__init__(self, **kwargs)
 
     def update(self):
         pass
