@@ -6,10 +6,24 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
+from app.utils.cloneable import Cloneable
 
-class GanttDiagram:
-    def __init__(self):
-        pass
+
+class GanttDiagram(Cloneable):
+    def __init__(self, title='GanttDiagram', figure_size=(12, 6), background='white'):
+        super(GanttDiagram, self).__init__()
+        self.title = title
+        self.figure_size = figure_size
+        self.background = background
+
+    def clone(self):
+        new_diagram = GanttDiagram(
+            title=self.title,
+            figure_size=self.figure_size,
+            background=self.background
+        )
+
+        return new_diagram
 
     @staticmethod
     def name_to_color(name):
@@ -18,9 +32,8 @@ class GanttDiagram:
         color = sha.hexdigest()[:6]
         return '#' + color
 
-    @staticmethod
-    def plot(tasks, date_from, date_to):
-        fig = plt.Figure(facecolor='white')
+    def plot(self, tasks, date_from, date_to):
+        fig = plt.Figure(facecolor=self.background)
         ax = fig.add_subplot(111)
         ax.grid(color='black', linestyle=':')
         ax.set_xlim(date_from, date_to)
@@ -47,11 +60,11 @@ class GanttDiagram:
         ax.set_xlabel('date')
 
         ax.set_yticklabels(map(lambda task: task.title, tasks))
-        ax.set_yticks(np.arange(0, tasks.__len__()))
+        ax.set_yticks(np.arange(0, len(tasks)))
         ax.set_ylabel('tasks')
 
-        ax.set_title('Gantt Diagram')
-        plt.rcParams["figure.figsize"] = [12, 6]
+        ax.set_title(self.title)
+        plt.rcParams["figure.figsize"] = self.figure_size
         fig.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.3)
 
         ax.legend(loc=1)

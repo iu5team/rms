@@ -1,7 +1,4 @@
 
-class Cloneable():
-    def __init__(self):
-        pass
-
+class Cloneable(object):
     def clone(self):
         pass

@@ -15,6 +15,10 @@ class GanttDiagramView(FormView):
     template_name = 'app/gantt_diagram_view.html'
     form_class = GanttDiagramSettingsForm
 
+    def __init__(self, **kwargs):
+        super(GanttDiagramView, self).__init__(**kwargs)
+        self.diagram = GanttDiagram(title='Gantt Diagram')
+
     def form_valid(self, form):
         date_from = form.cleaned_data['date_from']
         date_to = form.cleaned_data['date_to']
@@ -22,6 +26,8 @@ class GanttDiagramView(FormView):
 
         context = {}
         context['form'] = form
-        context['graphic'] = GanttDiagram.plot(tasks, date_from, date_to)
+
+        diagram = self.diagram.clone()
+        context['graphic'] = diagram.plot(tasks, date_from, date_to)
 
         return render(self.request, self.template_name, context)
