@@ -9,9 +9,20 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from app.views.alekseyl import active_record
 
 
+class EmployeeException(Exception):
+    pass
+
+
 class Employee(active_record.Employee):
     def __init__(self, **kwargs):
         super(Employee, self).__init__(**kwargs)
+
+    @staticmethod
+    def find_by_name(name):
+        if len(name) < 3:
+            raise EmployeeException('Query is too short')
+
+        return active_record.Employee.find_by_name(name)
 
     def plot_tasks(self, date_from, date_to):
         tasks = self.get_tasks(date_from, date_to)

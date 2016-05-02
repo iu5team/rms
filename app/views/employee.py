@@ -9,8 +9,9 @@ from django.views.generic.edit import DeleteView
 from django.views.generic.list import ListView
 
 import app.views.alekseyl.active_record.task
-from app.models import Employee, Calendar
+from app.models import Employee, Calendar, Task
 from app.views import alekseyl
+from app.views.alekseyl.domain_model.employee import EmployeeException
 
 
 class EmployeeCreate(CreateView):
@@ -37,7 +38,10 @@ class EmployeeList(ListView):
         query = self.request.GET.get('query')
 
         if query:
-            employees = app.views.alekseyl.active_record.employee.Employee.find_by_name(query)
+            try:
+                employees = app.views.alekseyl.domain_model.employee.Employee.find_by_name(query)
+            except EmployeeException:
+                employees = []
         else:
             employees = Employee.objects.all()
 
@@ -85,6 +89,12 @@ class EmployeeUpdate(UpdateView):
     fields = ['name', 'manager', 'position', 'salary']
     template_name_suffix = '_update'
     success_url = reverse_lazy('employee_list')
+
+    # demonstration purpose method
+    def change_name(self):
+        emp = alekseyl.active_record.Employee.find_by_id(id)
+        emp.name = self.kwargs['name']
+        emp.save()
 
     def get_queryset(self):
         employee_id = int(self.kwargs['pk'])

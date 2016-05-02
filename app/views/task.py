@@ -12,6 +12,7 @@ from django.views.generic.detail import DetailView
 from app.models import Task, Employee
 import app.views.gateway.task_gateway
 from app.views import alekseyl
+from app.views.alekseyl.domain_model.task import TaskException
 from app.views.gateway.task_gateway import TaskGateway
 from app.views.igor.domain import RMSTask, RMSEmployee, SpentTimeArguments
 
@@ -57,7 +58,10 @@ class TaskList(ListView):
         query = self.request.GET.get('query')
 
         if query:
-            tasks = alekseyl.domain_model.task.Task.find_by_title(query)
+            try:
+                tasks = alekseyl.domain_model.task.Task.find_by_title(query)
+            except TaskException:
+                tasks = []
         else:
             tasks = Task.objects.all()
 
