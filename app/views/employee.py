@@ -98,11 +98,9 @@ class EmployeeUpdate(UpdateView):
 
     def get_queryset(self):
         employee_id = int(self.kwargs['pk'])
-       # return Employee.read(self.kwargs['pk'])
 
         if employee_id:
-            Employee.objects.filter(pk=employee_id)
-            return Employee.read(employee_id)
+            return Employee.objects.filter(pk=employee_id)
 
 
 class EmployeeDetail(DetailView):

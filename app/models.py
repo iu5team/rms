@@ -10,7 +10,6 @@ import datetime
 
 from django.core.exceptions import ValidationError
 from django.db import models
-from app.utils.db_utils import *
 from django.utils import timezone
 
 
@@ -132,19 +131,6 @@ class Employee(models.Model, AbstractModel):
 
     def __unicode__(self):
         return "{}".format(self.name)
-
-    @staticmethod
-    def read(empl_id):
-        conn = Connection.get_connection()
-        cursor = conn.cursor()
-
-        res = cursor.execute('SELECT * FROM app_employee WHERE `id` = ? LIMIT 1', empl_id)
-        desc = Connection.get_cursor_description(res)
-        row = res.fetchone()
-        data = Connection.row_to_dict(row, desc)
-
-        emp = Employee(**data)
-        return emp
 
 
 class Calendar(models.Model):
