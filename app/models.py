@@ -57,21 +57,27 @@ class Position(models.Model, AbstractModel):
     """
 
     title = models.CharField(max_length=100, null=False)
-    min_salary = models.IntegerField(null=False, validators=[validate_salary])
+    min_salary = models.IntegerField(null=False, validators=[])
 
     def __unicode__(self):
         return self.title
 
-    @staticmethod
-    def PosCreate():
-        pass
+    @classmethod
+    def PosCreate(cls, fields):
+        title = fields.get('title')
+        min_salary = fields.get('min_salary')
+
+        conn = Connection.get_connection()
+        conn.execute("""INSERT INTO {} (`title`, `min_salary`) VALUES (?, ?)""".format(cls._meta.db_table),
+                     (title, min_salary))
+        conn.commit()
 
     @staticmethod
     def PosRead(pos_id):
         conn = Connection.get_connection()
         cursor = conn.cursor()
 
-        res = cursor.execute('SELECT * FROM app_position WHERE `id` = ? LIMIT 1', pos_id)
+        res = cursor.execute('SELECT * FROM app_position WHERE `id` = ? LIMIT 1', [pos_id])
         desc = Connection.get_cursor_description(res)
         row = res.fetchone()
         data = Connection.row_to_dict(row, desc)
@@ -79,20 +85,54 @@ class Position(models.Model, AbstractModel):
         pos = Position(**data)
         return pos
 
-    @staticmethod
-    def PosUpdate(pos_id):
+    def PosUpdate(self):
+        conn = Connection.get_connection()
+        update_sql = []
+        update_args = []
+        for attr in ['title', 'min_salary']:
+            update_sql.append('{} = ?'.format(attr))
+            update_args.append(getattr(self, attr))
+        update_sql = ','.join(update_sql)
+        update_args.append(self.id)
+
+        conn.execute("""
+              UPDATE {} SET {} WHERE `id` = ?
+            """.format(self._meta.db_table, update_sql),
+                     update_args)
+        conn.commit()
+
+    def PosDelete(self):
+        conn = Connection.get_connection()
+        conn.execute("DELETE FROM {} WHERE `id` = ?".format(self._meta.db_table), [self.id])
+        conn.commit()
+
+
+class PosService:
+    def __init__(self):
         pass
 
     @staticmethod
-    def PosDelete(pos_id):
+    @abc.abstractmethod
+    def check(position_form):
         pass
 
 
-class CheckPosTitle(models.Model, AbstractModel):
+class CheckPosTitleService(PosService):
     @staticmethod
-    def has_title(value):
-        if value.len < 4:
-            raise ValidationError('Слишком короткое название должности!')
+    def check(position_form):
+        if len(position_form.cleaned_data['title']) < 4:
+            error = u'Слишком короткое название должности!'
+            position_form.add_error('title', error)
+            raise ValidationError(error)
+
+
+class CheckPosSalaryService(PosService):
+    @staticmethod
+    def check(position_form):
+        if position_form.cleaned_data['min_salary'] < 6500:
+            error = u'Слишком маленькая зарплата!'
+            position_form.add_error('min_salary', error)
+            raise ValidationError(error)
 
 
 class Task(models.Model, AbstractModel):
