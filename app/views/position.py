@@ -26,10 +26,7 @@ class PositionDetail(DetailView):
         context = super(PositionDetail, self).get_context_data(**kwargs)
         pk = context['position'].id
 
-        employees = Employee.objects.filter(position=pk)
-        context['employees'] = employees
-        context['employees_on_pos'] = Employee.objects.filter(position=pk)
-
+        Position.PosRead(pk)
         return context
 
 

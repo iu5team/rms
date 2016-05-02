@@ -7,7 +7,7 @@ from __future__ import unicode_literals
 
 import abc
 import datetime
-
+from app.utils.db_utils import *
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
@@ -61,6 +61,38 @@ class Position(models.Model, AbstractModel):
 
     def __unicode__(self):
         return self.title
+
+    @staticmethod
+    def PosCreate():
+        pass
+
+    @staticmethod
+    def PosRead(pos_id):
+        conn = Connection.get_connection()
+        cursor = conn.cursor()
+
+        res = cursor.execute('SELECT * FROM app_position WHERE `id` = ? LIMIT 1', pos_id)
+        desc = Connection.get_cursor_description(res)
+        row = res.fetchone()
+        data = Connection.row_to_dict(row, desc)
+
+        pos = Position(**data)
+        return pos
+
+    @staticmethod
+    def PosUpdate(empl_id):
+        pass
+
+    @staticmethod
+    def PosDelete(empl_id):
+        pass
+
+
+class CheckPosTitle(models.Model, Position):
+    @staticmethod
+    def has_title(value):
+        if value.len < 4:
+            raise ValidationError('Слишком короткое название должности!')
 
 
 class Task(models.Model, AbstractModel):
@@ -129,9 +161,8 @@ class Employee(models.Model, AbstractModel):
         self.save()
         return self
 
-
     @staticmethod
-    def delete(employee_id):
+    def my_delete(employee_id):
         employee = Employee.objects.filter(pk=employee_id).get()
         Employee.objects.filter(manager=employee).update(manager=None)
         employee.delete()
@@ -145,7 +176,7 @@ class Calendar(models.Model):
     """
     Отметки о выходных и больничных
     """
-    vyh ='выходной'
+    vyh = 'выходной'
     bol = 'больничный'
     day_coice = ((vyh, 'выходной'), (bol, 'больничный'))
     person = models.ForeignKey(Employee, null=False)
@@ -156,4 +187,3 @@ class Calendar(models.Model):
         self.person = person
         self.save()
         return self
-
