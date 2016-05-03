@@ -51,6 +51,7 @@ def validate_salary(value):
 
 class Position(models.Model, AbstractModel):
     """
+    \brief Класс описания должности ( для CRUD должности)
     Должность
     Поле =- название должности
     Мин. зарплата
@@ -62,8 +63,14 @@ class Position(models.Model, AbstractModel):
     def __unicode__(self):
         return self.title
 
+
+
     @classmethod
     def PosCreate(cls, fields):
+        """
+        \brief Create должности для активной записи.
+        \param fields - поля для добавления в таблицу
+        """
         title = fields.get('title')
         min_salary = fields.get('min_salary')
 
@@ -72,8 +79,13 @@ class Position(models.Model, AbstractModel):
                      (title, min_salary))
         conn.commit()
 
+
     @staticmethod
     def PosRead(pos_id):
+        """
+        \brief Read должности для активной записи.
+        \param pos_id - id читаемой записи
+        """
         conn = Connection.get_connection()
         cursor = conn.cursor()
 
@@ -85,7 +97,14 @@ class Position(models.Model, AbstractModel):
         pos = Position(**data)
         return pos
 
+
     def PosUpdate(self):
+        """
+        \brief Update должности для активной записи.
+
+
+        Обновляет поля записи, для которой был вызван.
+        """
         conn = Connection.get_connection()
         update_sql = []
         update_args = []
@@ -102,6 +121,10 @@ class Position(models.Model, AbstractModel):
         conn.commit()
 
     def PosDelete(self):
+        """
+        \brief Delete должности для активной записи.
+        Удаляет запись для которой был вызван.
+        """
         conn = Connection.get_connection()
         conn.execute("DELETE FROM {} WHERE `id` = ?".format(self._meta.db_table), [self.id])
         conn.commit()
@@ -156,7 +179,7 @@ class Task(models.Model, AbstractModel):
 
     def set_assignee(self, employee):
         """Метод установки ответственного
-        :param emloyee: Сотрудник (класс Employee)
+        @param emloyee: Сотрудник (класс Employee)
         """
         self.assignee = employee
         self.save()
