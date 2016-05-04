@@ -1,5 +1,15 @@
+# coding=utf-8
+##
+# @file
+# @brief Gateway для работы с базой данных
+
 from app.utils.db_utils import *
 
+
+##
+# @brief Базовый класс для раболты с БД
+#
+# Отображает строку таблицы БД в объект
 
 class Gateway(object):
     TABLE_NAME = None
@@ -50,6 +60,14 @@ class Gateway(object):
     def get_conn(cls):
         return Connection.get_connection()
 
+    ##
+    # @brief find_by_id - Поиск по id
+    #
+    # Ищет запись текущего класса по id
+    # @param id - id сущности
+    # @return Объект типа Gateway
+    #
+    #
     @classmethod
     def find_by_id(cls, id):
         c = cls.get_conn().cursor()
@@ -61,6 +79,14 @@ class Gateway(object):
         d = Connection.row_to_dict(row, desc)
         return cls(__exists__=True, **d)
 
+    ##
+    # @brief save - Сохранить объект в БД
+    #
+    # Если запись уже существовала, что она будет обновлена,
+    # иначе - вставится новая запись
+    # @return Объект типа Gateway
+    #
+    #
     def save(self):
         if self.__exists__:
             if self.id is None:
@@ -101,6 +127,10 @@ class Gateway(object):
             self._id = c.lastrowid
             self.__exists__ = True
 
+    ##
+    # @brief delete - Удаляет объект из БД
+    #
+    #
     def delete(self, *args, **kwargs):
         if not self.__exists__ or self.id is None:
             raise self.DoesNotExist()
@@ -109,6 +139,16 @@ class Gateway(object):
         self.conn.commit()
         self.__exists__ = False
 
+    ##
+    # @brief find_by_fields - Поиск по полям сущности
+    #
+    # Можно передать словарь атрибутов, который будут объедены через AND
+    #
+    # @code
+    # {.py}
+    # obj.find_by_fields(attr1='value1', attr2='value2')
+    # @endcode
+    #
     @classmethod
     def find_by_fields(cls, **fields):
         if len(fields) == 0:
