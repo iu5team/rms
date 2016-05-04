@@ -1,4 +1,8 @@
-import copy
+
+    ##
+    # @file
+    # @brief Обработчики для генерации страниц для CRUD  сотрудника.
+
 
 from django import forms
 from django.core.urlresolvers import reverse_lazy

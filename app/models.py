@@ -1,8 +1,19 @@
 # coding=utf-8
 
-"""
-    Модели системы RMS
-"""
+##
+# @file
+# @brief Описание модели предметной области. Содержит классы сущностей предметной области
+# @mainpage Система управления ресурсами (Resource Management System - RMS).
+# @authors
+# Латкин И. Леоньтев Л. Гамазов И.
+# @date 21.04.2016
+# @version 1.2
+# @par Состав системы:
+# - @ref models - классы сущностей предметной области
+# - @ref views - классы-обработчики запросов для генерации страниц
+# - @ref settings - Настройки системы
+
+
 from __future__ import unicode_literals
 
 import abc
@@ -49,15 +60,19 @@ def validate_salary(value):
         raise ValidationError('Слишком маленькая зарплата!')
 
 
+##
+# @brief Класс описания должности ( для CRUD должности)
+#
+# Должность
+# Поля
+# - название должности
+# - Мин. зарплата
 class Position(models.Model, AbstractModel):
-    """
-    \brief Класс описания должности ( для CRUD должности)
-    Должность
-    Поле =- название должности
-    Мин. зарплата
-    """
 
+
+    ## Название должности
     title = models.CharField(max_length=100, null=False)
+    ## Минимальная зарплата
     min_salary = models.IntegerField(null=False, validators=[])
 
     def __unicode__(self):
@@ -66,11 +81,12 @@ class Position(models.Model, AbstractModel):
 
 
     @classmethod
+    ##
+    # @brief Create должности для активной записи.
+    # @param fields - поля для добавления в таблицу
+    #
     def PosCreate(cls, fields):
-        """
-        \brief Create должности для активной записи.
-        \param fields - поля для добавления в таблицу
-        """
+
         title = fields.get('title')
         min_salary = fields.get('min_salary')
 
@@ -81,11 +97,13 @@ class Position(models.Model, AbstractModel):
 
 
     @staticmethod
+
+        ##
+        # @brief Read должности для активной записи.
+        # @param pos_id - id читаемой записи
+
     def PosRead(pos_id):
-        """
-        \brief Read должности для активной записи.
-        \param pos_id - id читаемой записи
-        """
+
         conn = Connection.get_connection()
         cursor = conn.cursor()
 
@@ -97,14 +115,12 @@ class Position(models.Model, AbstractModel):
         pos = Position(**data)
         return pos
 
+    ##
+    # @brief Update должности для активной записи.
+    # Обновляет поля записи, для которой был вызван.
 
     def PosUpdate(self):
-        """
-        \brief Update должности для активной записи.
 
-
-        Обновляет поля записи, для которой был вызван.
-        """
         conn = Connection.get_connection()
         update_sql = []
         update_args = []
@@ -120,11 +136,12 @@ class Position(models.Model, AbstractModel):
                      update_args)
         conn.commit()
 
+    ##
+    # @brief Delete должности для активной записи.
+    # Удаляет запись для которой был вызван.
     def PosDelete(self):
-        """
-        \brief Delete должности для активной записи.
-        Удаляет запись для которой был вызван.
-        """
+
+
         conn = Connection.get_connection()
         conn.execute("DELETE FROM {} WHERE `id` = ?".format(self._meta.db_table), [self.id])
         conn.commit()
