@@ -3,42 +3,48 @@
     "model": "app.Position",
     "pk": 1,
     "fields": {
-      "title": "Junior Developer"
+      "title": "Junior Developer",
+      "min_salary": 7000
     }
   },
   {
     "model": "app.Position",
     "pk": 2,
     "fields": {
-      "title": "Middle Developer"
+      "title": "Middle Developer",
+      "min_salary": 8000
     }
   },
   {
     "model": "app.Position",
     "pk": 3,
     "fields": {
-      "title": "Senior Developer"
+      "title": "Senior Developer",
+      "min_salary": 10000
     }
   },
   {
     "model": "app.Position",
     "pk": 4,
     "fields": {
-      "title": "Technical Director"
+      "title": "Technical Director",
+      "min_salary": 120000
     }
   },
   {
     "model": "app.Position",
     "pk": 5,
     "fields": {
-      "title": "Project Manager"
+      "title": "Project Manager",
+      "min_salary": 60000
     }
   },
   {
     "model": "app.Position",
     "pk": 6,
     "fields": {
-      "title": "Product Manager"
+      "title": "Product Manager",
+      "min_salary": 70000
     }
   }
 ]
