@@ -2,7 +2,7 @@ from app.utils.db_utils import Connection
 
 
 class Model(object):
-    TABLE = None
+    __table__ = None
 
     def __init__(self, **kwargs):
         super(Model, self).__init__()
@@ -29,13 +29,14 @@ class Model(object):
             self.__dirty__.add(key)
 
     @classmethod
-    def find_by_id(cls, id):
-        c = cls.get_conn().cursor()
-        res = c.execute("SELECT * FROM {} WHERE `id` = ?".format(cls.TABLE), [id])
+    def get(cls, id):
+        c = Connection.get_connection().cursor()
+        res = c.execute("SELECT * FROM {} WHERE `id` = ? LIMIT 1".format(cls.__table__), [id])
         desc = Connection.get_cursor_description(res)
         row = res.fetchone()
         if row is None:
             raise 'Unable to find: {}'.format(id)
+
         d = Connection.row_to_dict(row, desc)
         return cls(__exists__=True, **d)
 
@@ -54,7 +55,7 @@ class Model(object):
         c = self.conn.cursor()
         c.execute("""
                     INSERT INTO {} ({}) VALUES ({})
-                  """.format(self.TABLE, insert_sql, insert_sql_values),
+                  """.format(self.__table__, insert_sql, insert_sql_values),
                   insert_args)
         self.conn.commit()
         self._id = c.lastrowid
@@ -77,7 +78,7 @@ class Model(object):
 
                 self.conn.execute("""
                   UPDATE {} SET {} WHERE `id` = ?
-                """.format(self.TABLE, update_sql),
+                """.format(self.__table__, update_sql),
                                   update_args)
                 self.conn.commit()
         else:
@@ -87,7 +88,7 @@ class Model(object):
         if not self.__exists__ or self.id is None:
             raise Exception('Unable to delete')
 
-        self.conn.execute("DELETE FROM {} WHERE `id` = ?".format(self.TABLE), [self.id])
+        self.conn.execute("DELETE FROM {} WHERE `id` = ?".format(self.__table__), [self.id])
         self.conn.commit()
         self.__exists__ = False
 
@@ -96,7 +97,7 @@ class Model(object):
         if len(fields) == 0:
             return None
 
-        c = cls.get_conn().cursor()
+        c = Connection.get_connection().cursor()
         query_args = []
         query_sql = []
 
@@ -106,7 +107,7 @@ class Model(object):
 
         query_sql = ' AND '.join(query_sql)
 
-        res = c.execute("SELECT * FROM {} WHERE ({})".format(cls.TABLE, query_sql), query_args)
+        res = c.execute("SELECT * FROM {} WHERE ({})".format(cls.__table__, query_sql), query_args)
         desc = Connection.get_cursor_description(res)
         result = []
         for row in res:

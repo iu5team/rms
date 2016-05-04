@@ -3,6 +3,8 @@ from app.views.alekseyl.active_record.model import Model
 
 
 class Task(Model):
+    __table__ = 'app_task'
+
     id = None
     creation_date = None
     finish_date = None
@@ -14,13 +16,6 @@ class Task(Model):
 
     def __init__(self, **kwargs):
         super(Task, self).__init__(**kwargs)
-
-    def update(self):
-        pass
-
-    @staticmethod
-    def get(pk):
-        pass
 
     @staticmethod
     def find(from_date, to_date, assignee_id=None):
@@ -86,6 +81,3 @@ class Task(Model):
             tasks.append(task)
 
         return tasks
-
-    def delete(self):
-        pass

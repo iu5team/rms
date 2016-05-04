@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 import cStringIO
 from base64 import b64encode
 
@@ -8,6 +10,13 @@ import numpy as np
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
 from app.utils.cloneable import Cloneable
+
+
+font = {
+    'family': 'Verdana',
+    'weight': 'normal'
+}
+matplotlib.rc('font', **font)
 
 
 class GanttDiagram(Cloneable):

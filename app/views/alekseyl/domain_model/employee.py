@@ -1,12 +1,22 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 import cStringIO
 import datetime
 from base64 import b64encode
 
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
 from app.views.alekseyl import active_record
+
+
+font = {
+    'family': 'Verdana',
+    'weight': 'normal'
+}
+matplotlib.rc('font', **font)
 
 
 class EmployeeException(Exception):
