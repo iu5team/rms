@@ -5,23 +5,23 @@
     <input class="employee__id" type="hidden" value="{{ employee.id }}"/>
 
     <section class="employee__about">
-        <h3>About</h3>
+        <h3>Описание</h3>
         <ul>
-            <li>Manager: {{ employee.manager }}</li>
-            <li>Position: {{ employee.position }}</li>
-            <li>Salary: {{ employee.salary }}</li>
-            <li><a href="{% url 'employee_plot' employee.id %}">Show resource plot</a></li>
+            <li>Руководитель: {{ employee.manager }}</li>
+            <li>Должность: {{ employee.position }}</li>
+            <li>Зарплата: {{ employee.salary }}</li>
+            <li><a href="{% url 'employee_plot' employee.id %}">Построить график ресурсов</a></li>
         </ul>
     </section>
 
     <section class="employee__controls">
-        <a href="{% url 'employee_update' employee.id %}" >Update employee</a>
+        <a href="{% url 'employee_update' employee.id %}" >Обновить сотрудника</a>
         <a href="{% url 'calendar_create' employee.id %}" >Добавить отметку календаря</a>
-        <a href="{% url 'employee_confirm_delete' employee.id %}" >Delete employee</a>
+        <a href="{% url 'employee_confirm_delete' employee.id %}" >Удалить сотрудника</a>
     </section>
 
     <section class="employee__tasks">
-        <h3>Undone Tasks ({{ tasks_undone | length }})</h3>
+        <h3>Незавершенные задания ({{ tasks_undone | length }})</h3>
         <ul>
             {% for task in tasks_undone %}
                 <li>
@@ -32,7 +32,7 @@
     </section>
 
     <section class="employee__tasks">
-        <h3>Done Tasks ({{ tasks_done | length }})</h3>
+        <h3>Выполненные задания ({{ tasks_done | length }})</h3>
         <ul>
             {% for task in tasks_done %}
                 <li>
@@ -43,7 +43,7 @@
     </section>
 
     <section class="employee__calendar">
-        <h3>Tasks calendar</h3>
+        <h3>Рабочий календарь</h3>
         <div class="calendar-datepicker datepicker-employee-calendar"></div>
         <div class="calendar-tasks"></div>
         <script type="application/javascript">

@@ -3,7 +3,7 @@
         {% for task in object_list %}
             <li><a href="{% url 'task_detail' task.id %}">{{ task.title }}</a></li>
         {% empty %}
-            No tasks for today!
+            На сегодня задач нет. Все свободны!
         {% endfor %}
     </ul>
 </section>

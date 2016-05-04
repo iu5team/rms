@@ -1,7 +1,11 @@
+# coding=utf-8
+##
+# @file
+# @brief Обработчики для генерации страниц для CRUD  сотрудника.
+
+
 from django import forms
 from django.core.urlresolvers import reverse_lazy
-from django.db.models import Q
-from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView, FormView
 from django.views.generic.edit import CreateView, UpdateView
@@ -52,11 +56,10 @@ class EmployeeDelete(DeleteView):
     model = Employee
     success_url = reverse_lazy('employee_list')
 
-    def delete(self, request, *args, **kwargs):
-        employee = self.get_object()
-        Employee.objects.filter(manager=employee).update(manager=None)
-        Task.objects.filter(assignee=employee).update(assignee=None)
-        return super(EmployeeDelete, self).delete(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        empl_id = self.kwargs['pk']
+        Employee.delete(empl_id)
+        return redirect(self.success_url)
 
 
 class EmployeePlotSettingsForm(forms.Form):
@@ -128,7 +131,7 @@ class EmployeeImplementation():
 
 class EmployeeUse1(EmployeeImplementation):
     def __init__(self, **kwargs):
-        pass
+        EmployeeImplementation.__init__(self, **kwargs)
 
     def get_context_data_impl(self, context):
         pk = context['employee'].id
@@ -143,7 +146,7 @@ class EmployeeUse1(EmployeeImplementation):
 
 class EmployeeUse2(EmployeeImplementation):
     def __init__(self, **kwargs):
-        pass
+        EmployeeImplementation.__init__(self, **kwargs)
 
     def get_context_data_impl(self, context):
         pk = context['employee'].id

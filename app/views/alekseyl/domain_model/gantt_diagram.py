@@ -2,6 +2,7 @@ import cStringIO
 from base64 import b64encode
 
 import matplotlib
+import matplotlib.dates
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas

@@ -1,14 +1,26 @@
 {% extends 'base.html' %}
 
+        {% block header %}
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li><a href="{% url 'index' %}">Старт!</a></li>
+                        <li><a href="{% url 'employee_list' %}">Сотрудники</a></li>
+                        <li class="active"><a href="{% url 'task_list' %}">Задачи</a></li>
+                        <li><a href="{% url 'gantt_diagram' %}">Диаграмма Ганта</a></li>
+                        <li><a href="{% url 'position_list' %}">Должности</a></li>
+                    </ul>
+                </div>
+        {% endblock %}
+
 {% block content %}
-    <h1>Tasks</h1>
+    <h1>Задачи</h1>
 
     <section class="search">
         <form>
             <div class="input-group">
-                <input type="text" class="form-control" name="query" value="{{ query | default:'' }}" placeholder="Search for...">
+                <input type="text" class="form-control" name="query" value="{{ query | default:'' }}" placeholder="Поиск...">
                 <span class="input-group-btn">
-                    <button class="btn btn-default" type="submit">Search</button>
+                    <button class="btn btn-default" type="submit">Поиск</button>
                 </span>
             </div>
         </form>
@@ -22,7 +34,7 @@
 
     <section class="add-section">
         <a href="{% url 'task_create' %}">
-            <button type="button" class="btn btn-primary btn-sm center-block">Create a task</button>
+            <button type="button" class="btn btn-primary btn-sm center-block">Добавить задачу</button>
         </a>
     </section>
 {% endblock %}
