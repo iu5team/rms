@@ -5,16 +5,16 @@ from app.views.alekseyl.active_record.model import Model
 class Task(Model):
     __table__ = 'app_task'
 
-    id = None
-    creation_date = None
-    finish_date = None
-    status = None
-    description = None
-    title = None
-    assignee_id = None
-    wasted_days = None
-
     def __init__(self, **kwargs):
+        self.id = None
+        self.creation_date = None
+        self.finish_date = None
+        self.status = None
+        self.description = None
+        self.title = None
+        self.assignee_id = None
+        self.wasted_days = None
+
         super(Task, self).__init__(**kwargs)
 
     @staticmethod

@@ -7,13 +7,13 @@ from app.views.alekseyl.active_record.task import Task
 class Employee(Model):
     __table__ = 'app_employee'
 
-    id = None
-    name = None
-    position_id = None
-    salary = None
-    manager_id = None
-
     def __init__(self, **kwargs):
+        self.id = None
+        self.name = None
+        self.position_id = None
+        self.salary = None
+        self.manager_id = None
+
         super(Employee, self).__init__(**kwargs)
 
     @classmethod

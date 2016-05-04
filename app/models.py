@@ -5,13 +5,14 @@
 # @brief Описание модели предметной области. Содержит классы сущностей предметной области
 # @mainpage Система управления ресурсами (Resource Management System - RMS).
 # @authors
-# Латкин И. Леоньтев Л. Гамазов И.
+# Латкин И. Леонтьев Л. Гамазов И.
 # @date 21.04.2016
 # @version 1.2
-# @par Состав системы:
-# - @ref models - классы сущностей предметной области
-# - @ref views - классы-обработчики запросов для генерации страниц
-# - @ref settings - Настройки системы
+# @par Примеры документации:
+# - @ref models.py - Классы сущностей предметной области
+# - @ref utils/cloneable.py - Базовый класс для паттерна Прототип
+# - @ref views/alekseyl/domain_model/gantt_diagram.py - Диграмма Ганта
+# - @ref views/gateway/gateway.py - Шлюз записи
 
 
 from __future__ import unicode_literals
