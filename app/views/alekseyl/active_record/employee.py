@@ -1,4 +1,4 @@
-from app.views.alekseyl.model import Model
+from app.views.alekseyl.active_record.model import Model
 
 from app.utils.db_utils import *
 from app.views.alekseyl.active_record.task import Task
@@ -17,8 +17,8 @@ class Employee(Model):
     def update(self):
         pass
 
-    @staticmethod
-    def get(pk):
+    @classmethod
+    def get(cls, pk):
         conn = Connection.get_connection()
         cursor = conn.cursor()
 
@@ -27,11 +27,11 @@ class Employee(Model):
         row = res.fetchone()
         data = Connection.row_to_dict(row, desc)
 
-        emp = Employee(**data)
+        emp = cls(**data)
         return emp
 
-    @staticmethod
-    def find_by_name(name):
+    @classmethod
+    def find_by_name(cls, name):
         conn = Connection.get_connection()
         cursor = conn.cursor()
 
@@ -44,7 +44,7 @@ class Employee(Model):
         employees = []
         for row in res:
             data = Connection.row_to_dict(row, desc)
-            employee = Task(**data)
+            employee = cls(**data)
             employees.append(employee)
 
         return employees

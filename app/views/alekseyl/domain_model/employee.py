@@ -17,8 +17,8 @@ class Employee(active_record.Employee):
     def __init__(self, **kwargs):
         super(Employee, self).__init__(**kwargs)
 
-    @staticmethod
-    def find_by_name(name):
+    @classmethod
+    def find_by_name(cls, name):
         if len(name) < 3:
             raise EmployeeException('Query is too short')
 
@@ -29,7 +29,7 @@ class Employee(active_record.Employee):
 
         fig = plt.Figure(facecolor='white')
         ax = fig.add_subplot(111)
-        ax.grid(color = 'black', linestyle = ':')
+        ax.grid(color='black', linestyle=':')
 
         duration = (date_to - date_from).days
 

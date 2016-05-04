@@ -13,6 +13,7 @@ from django.views.generic.edit import DeleteView
 from django.views.generic.list import ListView
 
 import app.views.alekseyl.active_record.task
+from app.views.alekseyl.domain_model.employee import Employee as AlekseylDomainEmployee
 from app.models import Employee, Calendar, Task
 from app.views import alekseyl
 from app.views.alekseyl.domain_model.employee import EmployeeException
@@ -57,8 +58,9 @@ class EmployeeDelete(DeleteView):
     success_url = reverse_lazy('employee_list')
 
     def post(self, request, *args, **kwargs):
-        empl_id = self.kwargs['pk']
-        Employee.delete(empl_id)
+        pk = self.kwargs['pk']
+        employee = Employee.objects.filter(pk=pk).get()
+        employee.delete()
         return redirect(self.success_url)
 
 
@@ -80,7 +82,7 @@ class EmployeePlotView(FormView):
         context = {}
         context['form'] = form
 
-        employee = app.views.alekseyl.active_record.employee.Employee.get(employee_id)
+        employee = AlekseylDomainEmployee.get(employee_id)
         context['employee'] = employee
         context['graphic'] = employee.plot_tasks(date_from, date_to)
 
