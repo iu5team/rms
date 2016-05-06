@@ -11,7 +11,7 @@
 # @par Примеры документации:
 # - @ref models.py - Классы сущностей предметной области
 # - @ref utils/cloneable.py - Базовый класс для паттерна Прототип
-# - @ref views/alekseyl/domain_model/gantt_diagram.py - Диграмма Ганта
+# - @ref views/alekseyl/domain_model/gantt_diagram.py - Диaграмма Ганта
 # - @ref views/gateway/gateway.py - Шлюз записи
 
 
