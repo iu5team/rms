@@ -16,6 +16,7 @@ from django.views.generic.detail import DetailView
 
 from app.models import Position, Employee, CheckPosTitleService, CheckPosSalaryService
 
+
 ##
 # @brief Класс-обработчик запроса на создание новой должности
 #
@@ -56,9 +57,11 @@ class PositionCreate(CreateView):
         Position.PosCreate(form.cleaned_data)
         return HttpResponseRedirect(self.success_url)
 
-    ##
-    # @brief Класс-обработчик запроса на обзор должности
-    #
+        ##
+        # @brief Класс-обработчик запроса на обзор должности
+        #
+
+
 class PositionDetail(DetailView):
     model = Position
     fields = ['title', 'min_salary']
@@ -91,6 +94,7 @@ class PositionUpdate(UpdateView):
 
         if pos_id:
             return Position.objects.filter(pk=pos_id)
+
     ##
     # @brief Метод проверки формы на правильность заполнения.
     #
@@ -113,6 +117,7 @@ class PositionUpdate(UpdateView):
                 return self.form_invalid(form)
         else:
             return self.form_invalid(form)
+
 
 ##
 # @brief Класс-обработчик запроса на вывод всех должностей, имеющихся в системе
@@ -140,6 +145,7 @@ class PositionList(ListView):
             pos = Position.objects.all()
 
         return pos
+
 
 ##
 # @brief Класс-обработчик запроса на удаление выбранной должности.

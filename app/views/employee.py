@@ -5,16 +5,18 @@
 
 
 from django import forms
+from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView, FormView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.edit import DeleteView
 from django.views.generic.list import ListView
+from django.http.response import Http404, HttpResponseBadRequest, HttpResponseRedirect
 
 import app.views.alekseyl.active_record.task
 from app.views.alekseyl.domain_model.employee import Employee as AlekseylDomainEmployee
-from app.models import Employee, Calendar, Task
+from app.models import Employee, Calendar, Task, EmplNameUpdService, EmplNameCreateService
 from app.views import alekseyl
 from app.views.alekseyl.domain_model.employee import EmployeeException
 
@@ -24,6 +26,22 @@ class EmployeeCreate(CreateView):
     fields = ['name', 'manager', 'position', 'salary']
     success_url = reverse_lazy('employee_list')
 
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        form = self.get_form()
+
+        if form.is_valid():
+            try:
+                EmplNameCreateService.check(form)
+
+                return self.form_valid(form)
+            except ValidationError:
+                return self.form_invalid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        return HttpResponseRedirect(self.success_url)
 
 class EmployeeList(ListView):
     model = Employee
@@ -58,9 +76,8 @@ class EmployeeDelete(DeleteView):
     success_url = reverse_lazy('employee_list')
 
     def post(self, request, *args, **kwargs):
-        pk = self.kwargs['pk']
-        employee = Employee.objects.filter(pk=pk).get()
-        employee.delete()
+        emp = Employee.EmplRead(self.kwargs['pk'])
+        emp.EmplDelete()
         return redirect(self.success_url)
 
 
@@ -107,6 +124,22 @@ class EmployeeUpdate(UpdateView):
         if employee_id:
             return Employee.objects.filter(pk=employee_id)
 
+    def form_valid(self, form):
+        empl_id = int(self.kwargs['pk'])
+        empl = Employee.EmplRead(empl_id)
+        empl.name = form.cleaned_data['name']
+        empl.salary = form.cleaned_data['salary']
+        empl.manager = form.cleaned_data['manager']
+        empl.position = form.cleaned_data['position']
+        if form.is_valid():
+            try:
+                EmplNameUpdService.checkupd(form, empl)
+                return HttpResponseRedirect(self.success_url)
+            except ValidationError:
+                return self.form_invalid(form)
+        else:
+            return self.form_invalid(form)
+
 
 class EmployeeDetail(DetailView):
     model = Employee
@@ -119,6 +152,7 @@ class EmployeeDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(EmployeeDetail, self).get_context_data(**kwargs)
+        Employee.EmplRead(context['employee'].id)
         self.implementation.get_context_data_impl(context=context)
         return context
 

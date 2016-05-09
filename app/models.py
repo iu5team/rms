@@ -69,8 +69,6 @@ def validate_salary(value):
 # - название должности
 # - Мин. зарплата
 class Position(models.Model, AbstractModel):
-
-
     ## Название должности
     title = models.CharField(max_length=100, null=False)
     ## Минимальная зарплата
@@ -79,15 +77,12 @@ class Position(models.Model, AbstractModel):
     def __unicode__(self):
         return self.title
 
-
-
     @classmethod
     ##
     # @brief Create должности для активной записи.
     # @param fields - поля для добавления в таблицу
     #
     def PosCreate(cls, fields):
-
         title = fields.get('title')
         min_salary = fields.get('min_salary')
 
@@ -96,15 +91,12 @@ class Position(models.Model, AbstractModel):
                      (title, min_salary))
         conn.commit()
 
-
     @staticmethod
-
-        ##
-        # @brief Read должности для активной записи.
-        # @param pos_id - id читаемой записи
+    ##
+    # @brief Read должности для активной записи.
+    # @param pos_id - id читаемой записи
 
     def PosRead(pos_id):
-
         conn = Connection.get_connection()
         cursor = conn.cursor()
 
@@ -121,7 +113,6 @@ class Position(models.Model, AbstractModel):
     # Обновляет поля записи, для которой был вызван.
 
     def PosUpdate(self):
-
         conn = Connection.get_connection()
         update_sql = []
         update_args = []
@@ -141,8 +132,6 @@ class Position(models.Model, AbstractModel):
     # @brief Delete должности для активной записи.
     # Удаляет запись для которой был вызван.
     def PosDelete(self):
-
-
         conn = Connection.get_connection()
         conn.execute("DELETE FROM {} WHERE `id` = ?".format(self._meta.db_table), [self.id])
         conn.commit()
@@ -242,15 +231,137 @@ class Employee(models.Model, AbstractModel):
         self.save()
         return self
 
+    @classmethod
+    def EmplCreate(cls):
+
+        conn = Connection.get_connection()
+        update_sql = []
+        update_args = []
+        for attr in ['title', 'min_salary']:
+            update_sql.append('{} = ?'.format(attr))
+            update_args.append(getattr(cls, attr))
+        update_sql = ','.join(update_sql)
+        conn.execute("""INSERT INTO {} (`name`, `manager`, `position`, `salary`) VALUES (?, ?, ? ,?)""".format(
+            cls._meta.db_table, update_sql),
+            update_args)
+        conn.commit()
+
     @staticmethod
-    def my_delete(employee_id):
-        employee = Employee.objects.filter(pk=employee_id).get()
-        Employee.objects.filter(manager=employee).update(manager=None)
-        employee.delete()
-        return employee
+    ##
+    # @brief Read должности для активной записи.
+    # @param pos_id - id читаемой записи
+
+    def EmplRead(empl_id):
+        conn = Connection.get_connection()
+        cursor = conn.cursor()
+
+        res = cursor.execute('SELECT * FROM app_employee WHERE `id` = ? LIMIT 1', [empl_id])
+        desc = Connection.get_cursor_description(res)
+        row = res.fetchone()
+        data = Connection.row_to_dict(row, desc)
+
+        empl = Employee(**data)
+        return empl
+
+    ##
+    # @brief Update должности для активной записи.
+    # Обновляет поля записи, для которой был вызван.
+
+    def EmplUpdate(self):
+        conn = Connection.get_connection()
+        update_sql = []
+        update_args = []
+        for attr in ['name', 'manager', 'position', 'salary']:
+            update_sql.append('{} = ?'.format(attr))
+            update_args.append(getattr(self, attr))
+        update_sql = ','.join(update_sql)
+        update_args.append(self.id)
+
+        conn.execute("""
+              UPDATE {} SET {} WHERE `id` = ?
+            """.format(self._meta.db_table, update_sql),
+                     update_args)
+        conn.commit()
+
+    ##
+    # @brief Delete должности для активной записи.
+    # Удаляет запись для которой был вызван.
+    def EmplDelete(self):
+        conn = Connection.get_connection()
+        conn.execute("DELETE FROM {} WHERE `id` = ?".format(self._meta.db_table), [self.id])
+        conn.commit()
 
     def __unicode__(self):
         return "{}".format(self.name)
+
+
+class EmployeeService:
+    def __init__(self):
+        pass
+
+    @staticmethod
+    @abc.abstractmethod
+    def check(employee_form):
+        pass
+
+    @staticmethod
+    @abc.abstractmethod
+    def checkupd(employee_form, employee):
+        pass
+
+
+class EmplNameCreateService(EmployeeService):
+    @staticmethod
+    def check(employee_form):
+        if len(employee_form.cleaned_data['name']) < 4:
+            error = u'Слишком короткое имя!'
+            employee_form.add_error('name', error)
+            raise ValidationError(error)
+        else:
+            EmplSalaryCreateService.check(employee_form)
+
+
+class EmplSalaryCreateService(EmployeeService):
+    @staticmethod
+    def check(employee_form):
+        if employee_form.cleaned_data['salary'] < 6500:
+            error = u'Слишком маленькая зарплата!'
+            employee_form.add_error('salary', error)
+            raise ValidationError(error)
+        else:
+            Employee.EmplCreate()
+
+
+class EmplNameUpdService(EmployeeService):
+    @staticmethod
+    def checkupd(employee_form, employee):
+        if len(employee_form.cleaned_data['name']) < 4:
+            error = u'Слишком короткое имя!'
+            employee_form.add_error('name', error)
+            raise ValidationError(error)
+        else:
+            empl = employee
+            EmplSalaryUpdService.checkupd(employee_form, empl)
+
+    @staticmethod
+    def check(employee_form):
+        pass
+
+
+class EmplSalaryUpdService(EmployeeService):
+    @staticmethod
+    def checkupd(employee_form, employee):
+        if employee_form.cleaned_data['salary'] < 6500:
+            error = u'Слишком маленькая зарплата!'
+            employee_form.add_error('salary', error)
+            raise ValidationError(error)
+        else:
+            empl = employee
+            empl.EmplUpdate()
+
+    @staticmethod
+    def check(employee_form):
+        pass
 
 
 class Calendar(models.Model):
