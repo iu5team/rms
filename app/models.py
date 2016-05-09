@@ -231,26 +231,23 @@ class Employee(models.Model, AbstractModel):
         self.save()
         return self
 
-    @classmethod
-    def EmplCreate(cls):
-
+    def EmplCreate(self):
         conn = Connection.get_connection()
         update_sql = []
         update_args = []
-        for attr in ['title', 'min_salary']:
+        for attr in ['name', 'manager_id', 'position_id', 'salary']:
             update_sql.append('{} = ?'.format(attr))
-            update_args.append(getattr(cls, attr))
+            update_args.append(getattr(self, attr))
         update_sql = ','.join(update_sql)
-        conn.execute("""INSERT INTO {} (`name`, `manager`, `position`, `salary`) VALUES (?, ?, ? ,?)""".format(
-            cls._meta.db_table, update_sql),
+        conn.execute("""INSERT INTO {} (`name`, `manager_id`, `position_id`, `salary`) VALUES (?, ?, ? ,?)""".format(
+            self._meta.db_table, update_sql),
             update_args)
         conn.commit()
 
-    @staticmethod
     ##
     # @brief Read должности для активной записи.
     # @param pos_id - id читаемой записи
-
+    @staticmethod
     def EmplRead(empl_id):
         conn = Connection.get_connection()
         cursor = conn.cursor()
@@ -266,12 +263,11 @@ class Employee(models.Model, AbstractModel):
     ##
     # @brief Update должности для активной записи.
     # Обновляет поля записи, для которой был вызван.
-
     def EmplUpdate(self):
         conn = Connection.get_connection()
         update_sql = []
         update_args = []
-        for attr in ['name', 'manager', 'position', 'salary']:
+        for attr in ['name', 'manager_id', 'position_id', 'salary']:
             update_sql.append('{} = ?'.format(attr))
             update_args.append(getattr(self, attr))
         update_sql = ','.join(update_sql)
@@ -329,7 +325,11 @@ class EmplSalaryCreateService(EmployeeService):
             employee_form.add_error('salary', error)
             raise ValidationError(error)
         else:
-            Employee.EmplCreate()
+            employee = Employee(name=employee_form.cleaned_data['name'],
+                                manager_id=employee_form.cleaned_data['manager'].id,
+                                position_id=employee_form.cleaned_data['position'].id,
+                                salary=employee_form.cleaned_data['salary'])
+            employee.EmplCreate()
 
 
 class EmplNameUpdService(EmployeeService):
