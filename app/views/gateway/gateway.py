@@ -124,7 +124,8 @@ class Gateway(object):
               """.format(self.TABLE_NAME, insert_sql, insert_sql_values),
                       insert_args)
             self.conn.commit()
-            setattr(self, 'id', c.lastrowid)
+            self._id = c.lastrowid
+            self._fields['id'] = c.lastrowid
             self.__exists__ = True
 
     ##
@@ -132,10 +133,10 @@ class Gateway(object):
     #
     #
     def delete(self, *args, **kwargs):
-        if not self.__exists__ or self.id is None:
+        if not self.__exists__ or self._id is None:
             raise self.DoesNotExist()
 
-        self.conn.execute("DELETE FROM {} WHERE `id` = ?".format(self.TABLE_NAME), [self.id])
+        self.conn.execute("DELETE FROM {} WHERE `id` = ?".format(self.TABLE_NAME), [self._id])
         self.conn.commit()
         self.__exists__ = False
 
