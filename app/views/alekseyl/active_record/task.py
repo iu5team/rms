@@ -70,7 +70,7 @@ class Task(Model):
         conn = Connection.get_connection()
         cursor = conn.cursor()
 
-        res = cursor.execute('SELECT * FROM app_task WHERE `title` LIKE \'%{}%\''.format(title))
+        res = cursor.execute('SELECT * FROM `app_task` WHERE `title` LIKE \'%{}%\''.format(title))
 
         desc = Connection.get_cursor_description(res)
 

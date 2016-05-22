@@ -5,10 +5,11 @@ from django.conf import settings
 
 class Connection(object):
     obj = None
+    DB_PATH = None
 
     def __init__(self):
         super(Connection, self).__init__()
-        self.db_name = settings.DATABASES['default']['NAME']
+        self.db_name = settings.DATABASES['default']['NAME'] if self.DB_PATH is None else self.DB_PATH
         self.conn = sqlite3.connect(self.db_name,
                                     detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES,
                                     check_same_thread=False)

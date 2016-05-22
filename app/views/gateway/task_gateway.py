@@ -27,9 +27,15 @@ class TaskGateway(Gateway):
             query_args.append(title)
         res = c.execute("SELECT * FROM {} WHERE `title` {}".format(cls.TABLE_NAME, query_sql), query_args)
         desc = Connection.get_cursor_description(res)
+        result = cls.res_and_desc_to_result(res, desc)
+        return result
+
+    @classmethod
+    def res_and_desc_to_result(cls, res, desc):
         result = []
         for row in res:
             d = Connection.row_to_dict(row, desc)
             d = cls(__exists__=True, **d)
             result.append(d)
+
         return result
