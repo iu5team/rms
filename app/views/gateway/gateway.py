@@ -173,3 +173,15 @@ class Gateway(object):
             d = cls(__exists__=True, **d)
             result.append(d)
         return result
+
+    @classmethod
+    def all(cls):
+        c = cls.get_conn().cursor()
+        res = c.execute("SELECT * FROM {}".format(cls.TABLE_NAME))
+        desc = Connection.get_cursor_description(res)
+        result = []
+        for row in res:
+            d = Connection.row_to_dict(row, desc)
+            d = cls(__exists__=True, **d)
+            result.append(d)
+        return result
