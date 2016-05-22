@@ -14,7 +14,7 @@ from app.views.alekseyl.domain_model.task import TaskException
 from app.views.gateway.task_gateway import TaskGateway
 
 
-class TestTask_ByBranch(TestCase):
+class TestTaskByBranch(TestCase):
     def setUp(self):
         self.title = None
         ar.Task.find_by_title = staticmethod(lambda title: self.title)
@@ -43,7 +43,7 @@ class TestTask_ByBranch(TestCase):
             self.fail()
 
 
-class TestTask_ByBoundaries(TestCase):
+class TestTaskByBoundaries(TestCase):
     def setUp(self):
         self.title = None
         ar.Task.find_by_title = staticmethod(lambda title: self.title)
@@ -100,10 +100,10 @@ class TestTask_ByBoundaries(TestCase):
             self.fail()
 
 
-class TestTaskGateway(TestCase):
+class TestTaskGatewayByDU(TestCase):
     @classmethod
     def setUpClass(cls):
-        super(TestTaskGateway, cls).setUpClass()
+        super(TestTaskGatewayByDU, cls).setUpClass()
         current_dir = os.path.dirname(os.path.abspath(__file__))
         Connection.DB_PATH = os.path.join(current_dir, '..', 'db.sqlite3')
 
